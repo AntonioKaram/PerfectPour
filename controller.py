@@ -6,16 +6,16 @@ from time import sleep
 factory = PiGPIOFactory()
 
 # Use hardware PWM pin (e.g., GPIO 18)
-servo = Servo(18, pin_factory=factory, min_pulse_width=0.0005, max_pulse_width=0.0025)
+servo = Servo(18, pin_factory=factory, min_pulse_width=0.0001, max_pulse_width=0.0025)
 
 try:
     while True:
         servo.min()  # Move to min position
-        sleep(0.5)
+        sleep(1)
         servo.mid()  # Move to mid position
-        sleep(0.5)
+        sleep(1)
         servo.max()  # Move to max position
-        sleep(0.5)
+        sleep(1)
 
 except KeyboardInterrupt:
     print("Program stopped")
