@@ -12,7 +12,7 @@ pwm.start(0)
 
 try:
     # Slowly increase the angle (0 to 180 degrees)
-    for duty in range(25, 120):  # Duty cycle from 2.5% to 12.5%
+    for duty in range(25, 110):  # Duty cycle from 2.5% to 12.5%
         pwm.ChangeDutyCycle(duty / 10.0)  # Convert to percentage
         time.sleep(0.1)  # Small delay between steps
     time.sleep(1)
