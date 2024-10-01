@@ -16,7 +16,7 @@ servo2 = Servo(13, pin_factory=factory, min_pulse_width=min_pulse_width, max_pul
 def reset_servo(servo):
     servo.value = 1
     sleep(1) 
-    servo.value = -1
+    servo.value = 0
     
     
 try:
