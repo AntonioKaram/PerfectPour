@@ -41,12 +41,6 @@ try:
     pwm.ChangeDutyCycle(100)
     time.sleep(1)
     
-    pwm.ChangeDutyCycle(-5)
-    time.sleep(1)
-    
-    pwm.ChangeDutyCycle(-1)
-    time.sleep(1)
-    
 
 finally:
     pwm.stop()
