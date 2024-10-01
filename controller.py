@@ -9,7 +9,7 @@ factory = PiGPIOFactory()
 servo = Servo(18, pin_factory=factory, min_pulse_width=0.00008, max_pulse_width=0.0023)
 
 def move_servo_smoothly(start_position, end_position, duration):
-    steps = 100  # Number of steps to take
+    steps = 1000  # Number of steps to take
     step_delay = duration / steps  # Time per step
     step_size = (end_position - start_position) / steps  # Increment for each step
     
