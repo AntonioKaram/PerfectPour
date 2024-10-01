@@ -18,7 +18,7 @@ try:
     time.sleep(1)
 
     # Slowly decrease the angle (180 to 0 degrees)
-    for duty in range(0, 25, -1):
+    for duty in range(110, 0, -1):
         pwm.ChangeDutyCycle(duty / 10.0)
         time.sleep(0.1)
     time.sleep(1)
