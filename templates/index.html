@@ -12,7 +12,7 @@
         {% if in_use %}
         <p style="color: #8B0000"><strong>Machine In Use</strong></p>
         {% else %}
-            <form action="/run-script">
+            <form action="/run-script" method="post">
                 <br/>
                 <button type="submit">Pour Me</button>
             </form>
@@ -21,5 +21,18 @@
     <footer>
         <p>&copy; Patent Not Even Submitted</p>
     </footer>
+
+    <script>
+        // Function to check machine status periodically
+        setInterval(() => {
+            fetch('/status')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.machine_in_use || data.timeout_occurred) {
+                        window.location.reload();
+                    }
+                });
+        }, 1000);
+    </script>
 </body>
 </html>

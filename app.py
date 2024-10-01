@@ -44,13 +44,13 @@ def home():
     else:
         return render_template('index.html', in_use=False)
 
-@app.route('/run-script')
+@app.route('/run-script', methods=['POST'])
 def run_script():
     global machine_in_use, user_active_time, current_user_session, timeout_occurred
     
     # Check if the machine is already in use
     if machine_in_use:
-        return "Machine is currently in use. Please wait."
+        return redirect(url_for('home'))
     
     # Lock the machine for this user session
     machine_in_use = True
@@ -97,7 +97,7 @@ def release_machine():
     
     return "You are not authorized to release the machine.", 403
 
-@app.route('/status')
+@app.route('/status', methods=['GET'])
 def status():
     """Endpoint to check the status of the machine."""
     return jsonify({
