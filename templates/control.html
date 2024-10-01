@@ -9,14 +9,10 @@
 <body>
     <h1>Control PerfectPour</h1>
     <div class="status">
-        {% if in_use %}
-        <p style="color: #8B0000"><strong>Machine In Use</strong></p>
-        {% else %}
-            <form action="/run-script">
-                <br/>
-                <button type="submit">Pour Me</button>
-            </form>
-        {% endif %}
+        <p><strong>Pouring...</strong></p>
+        <form action="/release-machine">
+            <button type="submit">Yes, I'm Done</button>
+        </form>
     </div>
     <footer>
         <p>&copy; Patent Not Even Submitted</p>

@@ -1,0 +1,38 @@
+body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #0c2340;
+        }
+
+        .status {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+
+        button {
+            background-color: #00843d;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        footer {
+            margin-top: 50px;
+            font-size: 0.8em;
+            color: #666;
+        }
