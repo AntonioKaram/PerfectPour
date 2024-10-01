@@ -14,10 +14,11 @@ servo1 = Servo(12, pin_factory=factory, min_pulse_width=min_pulse_width, max_pul
 servo2 = Servo(13, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
 
 def reset_servo(servo):
-    servo.max()
-    sleep(1)
-    servo.min()
-
+    servo.value = 1
+    sleep(1) 
+    servo.value = -1
+    
+    
 try:
     while True:
         print("Resetting all servos")
