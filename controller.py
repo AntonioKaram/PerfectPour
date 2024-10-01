@@ -23,7 +23,8 @@ try:
     #     time.sleep(0.1)
     # time.sleep(1)
     
-    pwm.ChangeDutyCycle(50)
+    pwm.ChangeDutyCycle(75)
+    
     print("Started") 
 
 finally:
