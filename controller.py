@@ -4,7 +4,6 @@ from time import sleep
 
 # Create a PiGPIOFactory instance and set the PWM frequency (default is 50Hz)
 factory = PiGPIOFactory()
-factory.set_pwm_frequency(50)  # 50 Hz is typically used for servos
 
 # Use hardware PWM pin (e.g., GPIO 18)
 servo = Servo(18, pin_factory=factory, min_pulse_width=0.0005, max_pulse_width=0.0025)
