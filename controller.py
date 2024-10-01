@@ -6,7 +6,7 @@ from time import sleep
 factory = PiGPIOFactory()
 
 # Use hardware PWM pin (e.g., GPIO 18)
-servo = Servo(18, pin_factory=factory, min_pulse_width=0.00009, max_pulse_width=0.0021)
+servo = Servo(18, pin_factory=factory, min_pulse_width=0.00009, max_pulse_width=0.0022)
 
 try:
     while True:
