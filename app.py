@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, session
+from flask import Flask, render_template, redirect, url_for, session, jsonify
 import os
 import time
 import threading
@@ -11,16 +11,18 @@ app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'default_secret_key')
 machine_in_use = False
 current_user_session = None
 user_active_time = None
-timeout_duration = 30 
+timeout_duration = 30
+timeout_occurred = False  # Flag to indicate if a timeout has occurred
 
 # Function to release the machine lock after the timeout
 def release_lock_after_timeout():
-    global machine_in_use, user_active_time, current_user_session
+    global machine_in_use, user_active_time, current_user_session, timeout_occurred
     while True:
         if machine_in_use and time.time() - user_active_time > timeout_duration:
             print("Timeout reached. Releasing machine lock.")
             machine_in_use = False
             current_user_session = None
+            timeout_occurred = True  # Set the timeout flag
         time.sleep(1)
 
 # Start a background thread to monitor the timeout
@@ -28,11 +30,15 @@ threading.Thread(target=release_lock_after_timeout, daemon=True).start()
 
 # Background function to run the servo control script
 def run_servo_script():
-    os.system('python3 test.py')
+    os.system('python3 test.py')  # Replace 'test.py' with your actual script path
 
 @app.route('/')
 def home():
-    global machine_in_use
+    global machine_in_use, timeout_occurred  # Include timeout_occurred
+    if timeout_occurred:
+        # Reset the timeout flag when accessing the home page
+        timeout_occurred = False
+
     if machine_in_use:
         return render_template('index.html', in_use=True)
     else:
@@ -40,7 +46,7 @@ def home():
 
 @app.route('/run-script')
 def run_script():
-    global machine_in_use, user_active_time, current_user_session
+    global machine_in_use, user_active_time, current_user_session, timeout_occurred
     
     # Check if the machine is already in use
     if machine_in_use:
@@ -65,7 +71,12 @@ def run_script():
 
 @app.route('/control')
 def control_page():
-    global machine_in_use, current_user_session
+    global machine_in_use, current_user_session, timeout_occurred
+    
+    # Check for timeout before checking machine state
+    if timeout_occurred:
+        timeout_occurred = False  # Reset the flag when accessing the control page
+        return redirect(url_for('home'))  # Redirect to the home page if timeout occurred
     
     # Check if the machine is in use and if the current session matches the user who started it
     if not machine_in_use or session.get('user_id') != current_user_session:
@@ -74,7 +85,7 @@ def control_page():
     # Render the control page if the session matches
     return render_template('control.html')
 
-@app.route('/release-machine')
+@app.route('/release-machine', methods=['POST'])  # Ensure this is a POST request
 def release_machine():
     global machine_in_use, current_user_session
     
@@ -85,6 +96,14 @@ def release_machine():
         return redirect(url_for('home'))
     
     return "You are not authorized to release the machine.", 403
+
+@app.route('/status')
+def status():
+    """Endpoint to check the status of the machine."""
+    return jsonify({
+        'machine_in_use': machine_in_use,
+        'timeout_occurred': timeout_occurred
+    })
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=9000)

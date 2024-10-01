@@ -10,12 +10,26 @@
     <h1>Control PerfectPour</h1>
     <div class="status">
         <p><strong>Pouring...</strong></p>
-        <form action="/release-machine">
+        <form action="/release-machine" method="post">
             <button type="submit">Yes, I'm Done</button>
         </form>
     </div>
     <footer>
         <p>&copy; Patent Not Even Submitted</p>
     </footer>
+
+    <script>
+        // Check machine status periodically
+        setInterval(() => {
+            fetch('/status')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.machine_in_use || data.timeout_occurred) {
+                        // Redirect to the home page if the machine is not in use or a timeout has occurred
+                        window.location.href = '/';
+                    }
+                });
+        }, 1000); // Check every 5 seconds
+    </script>
 </body>
 </html>

@@ -1,2 +1,1 @@
-while True:
-    print("")
+print("hello world")
