@@ -5,7 +5,7 @@ import threading
 import uuid
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'default_secret_key')
 
 # Global variables
 machine_in_use = False
@@ -25,6 +25,10 @@ def release_lock_after_timeout():
 
 # Start a background thread to monitor the timeout
 threading.Thread(target=release_lock_after_timeout, daemon=True).start()
+
+# Background function to run the servo control script
+def run_servo_script():
+    os.system('python3 test.py')
 
 @app.route('/')
 def home():
@@ -53,10 +57,10 @@ def run_script():
     # Store the current session controlling the machine
     current_user_session = session['user_id']
 
-    # Run control
-    os.system('python3 test.py')
+    # Start the servo control script in a background thread
+    threading.Thread(target=run_servo_script, daemon=True).start()
 
-    # Redirect to the control page after running the script
+    # Immediately redirect to the control page after starting the script
     return redirect(url_for('control_page'))
 
 @app.route('/control')
