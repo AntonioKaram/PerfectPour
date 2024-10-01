@@ -2,12 +2,12 @@ from gpiozero.pins.pigpio import PiGPIOFactory
 from gpiozero import Servo
 from time import sleep
 
-# Use PiGPIOFactory for precise control
-Servo.pin_factory = PiGPIOFactory()
+# Create a PiGPIOFactory instance and set the PWM frequency (default is 50Hz)
+factory = PiGPIOFactory()
+factory.set_pwm_frequency(50)  # 50 Hz is typically used for servos
 
-# Use a hardware PWM pin (e.g., GPIO 18)
-# Customize pulse width range and PWM frequency if needed
-servo = Servo(18, min_pulse_width=0.0005, max_pulse_width=0.0025, pwm_frequency=100)
+# Use hardware PWM pin (e.g., GPIO 18)
+servo = Servo(18, pin_factory=factory, min_pulse_width=0.0005, max_pulse_width=0.0025)
 
 try:
     while True:
