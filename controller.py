@@ -64,6 +64,9 @@ try:
         sleep(1)
         
         
+    move_servos()
+        
+        
 
 except KeyboardInterrupt:
     print("Program stopped")
