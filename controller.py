@@ -29,8 +29,6 @@ def move_servo_smoothly(servo, start_position, end_position, duration):
         sleep(step_delay)
 
 def move_servos():
-    print("Moving both servos from min to max")
-    
     # Create threads for both servo movements
     thread1 = Thread(target=move_servo_smoothly, args=(servo1, 0, 1, 2))
     thread2 = Thread(target=move_servo_smoothly, args=(servo2, 1, 0, 2))
@@ -42,6 +40,9 @@ def move_servos():
     # Wait for both threads to finish
     thread1.join()
     thread2.join()
+    
+    
+    
 
 try:
     move_servos()
