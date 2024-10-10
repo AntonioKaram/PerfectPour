@@ -45,9 +45,6 @@ def move_servos():
     
 
 try:
-    move_servos()
-    print("RESET SERVOS")
-    sleep(3)
     for i in range(2):
         print("Moving both servos")
         thread1 = Thread(target=move_servo_smoothly, args=(servo1, 0, 1, 2))
@@ -63,7 +60,7 @@ try:
         
         sleep(1)
         
-        
+    sleep(3) 
     move_servos()
         
         
