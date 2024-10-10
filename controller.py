@@ -44,13 +44,13 @@ def move_servos():
     thread2.join()
 
 try:
-    while True:
+    for i in range(1):
         move_servos()  # Move both servos
         sleep(1)
         
         print("Moving both servos from max to min")
         thread1 = Thread(target=move_servo_smoothly, args=(servo1, 1, 0, 2))
-        thread2 = Thread(target=move_servo_smoothly, args=(servo2, 1, 0, 2))
+        thread2 = Thread(target=move_servo_smoothly, args=(servo2, 0, 1, 2))
         
         # Start both threads
         thread1.start()
