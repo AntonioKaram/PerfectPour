@@ -30,8 +30,8 @@ def move_servo_smoothly(servo, start_position, end_position, duration):
 
 def move_servos():
     # Create threads for both servo movements
-    thread1 = Thread(target=move_servo_smoothly, args=(servo1, 0, 1, 2))
-    thread2 = Thread(target=move_servo_smoothly, args=(servo2, 1, 0, 2))
+    thread1 = Thread(target=move_servo_smoothly, args=(servo1, 1, 0, 2))
+    thread2 = Thread(target=move_servo_smoothly, args=(servo2, 0, 1, 2))
     
     # Start both threads
     thread1.start()
