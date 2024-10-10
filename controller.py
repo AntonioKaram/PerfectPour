@@ -44,7 +44,7 @@ def move_servos():
     thread2.join()
 
 try:
-    for i in range(1):
+    for i in range(2):
         move_servos()  # Move both servos
         sleep(1)
         
