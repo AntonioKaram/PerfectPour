@@ -33,7 +33,7 @@ def move_servos():
     
     # Create threads for both servo movements
     thread1 = Thread(target=move_servo_smoothly, args=(servo1, 0, 1, 2))
-    thread2 = Thread(target=move_servo_smoothly, args=(servo2, 0, 1, 2))
+    thread2 = Thread(target=move_servo_smoothly, args=(servo2, 1, 0, 2))
     
     # Start both threads
     thread1.start()
@@ -44,11 +44,11 @@ def move_servos():
     thread2.join()
 
 try:
+    move_servos()
+    print("RESET SERVOS")
+    sleep(3)
     for i in range(2):
-        move_servos()  # Move both servos
-        sleep(1)
-        
-        print("Moving both servos from max to min")
+        print("Moving both servos")
         thread1 = Thread(target=move_servo_smoothly, args=(servo1, 1, 0, 2))
         thread2 = Thread(target=move_servo_smoothly, args=(servo2, 0, 1, 2))
         
@@ -59,6 +59,10 @@ try:
         # Wait for both threads to finish
         thread1.join()
         thread2.join()
+        
+        sleep(1)
+        
+        
 
 except KeyboardInterrupt:
     print("Program stopped")
