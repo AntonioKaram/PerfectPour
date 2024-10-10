@@ -50,8 +50,8 @@ try:
     sleep(3)
     for i in range(2):
         print("Moving both servos")
-        thread1 = Thread(target=move_servo_smoothly, args=(servo1, 1, 0, 2))
-        thread2 = Thread(target=move_servo_smoothly, args=(servo2, 0, 1, 2))
+        thread1 = Thread(target=move_servo_smoothly, args=(servo1, 0, 1, 2))
+        thread2 = Thread(target=move_servo_smoothly, args=(servo2, 1, 0, 2))
         
         # Start both threads
         thread1.start()
