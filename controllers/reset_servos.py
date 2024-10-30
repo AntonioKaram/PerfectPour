@@ -6,39 +6,32 @@ from time import sleep
 
 GPIO.setwarnings(False)
 
-in1 = 17
-in2 = 27
+low = 17
+high = 27
 
 GPIO.setmode(GPIO.BCM)
 
-GPIO.setup(in1, GPIO.OUT)
-GPIO.setup(in2, GPIO.OUT)
+GPIO.setup(low, GPIO.OUT)
+GPIO.setup(high, GPIO.OUT)
 
 print("setup..")
-GPIO.output(in1, GPIO.LOW)
-GPIO.output(in2, GPIO.LOW)
+GPIO.output(low, GPIO.LOW)
+GPIO.output(high, GPIO.LOW)
 sleep(2)
 
 i = 0
 print("step 1..")
 
 
-def backward():
+def move(low, high):
     print("backwards...")
     for i in range(30000000):
-        GPIO.output(in1, GPIO.HIGH)
-        GPIO.output(in2, GPIO.LOW)
-        
-
-def forward():
-    print("forward...")        
-    for i in range(30000000):
-        GPIO.output(in1, GPIO.LOW)
-        GPIO.output(in2, GPIO.HIGH)
+        GPIO.output(low, GPIO.LOW)
+        GPIO.output(high, GPIO.HIGH)
     
 
-forward()
-backward()
-forward()
-backward()
+move(low, high)
+move(high, low)
+move(low, high)
+move(high, low)
 GPIO.cleanup()
