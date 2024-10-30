@@ -2,7 +2,12 @@ from time import sleep
 from math import sin, radians
 from gpiozero import Servo
 from threading import Thread
+import RPi.GPIO as GPIO # type: ignore
 from gpiozero.pins.pigpio import PiGPIOFactory
+
+# Initialize GPIO
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
 
 # Create a PiGPIOFactory instance
 factory = PiGPIOFactory()
@@ -10,12 +15,42 @@ factory = PiGPIOFactory()
 min_pulse_width = 0.00008  # 0 degrees
 max_pulse_width = 0.0023  # 180 degrees
 
-# Use Raspberry Pi v4 PWM pins
+# Set up rotating servos
 servo1 = Servo(12, pin_factory=factory, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
 servo2 = Servo(13, pin_factory=factory, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
 
-top_linear = Servo(17, pin_factory=factory)
-bottom_linear = Servo(27, pin_factory=factory)
+# Set up linear servos
+bottom_low = 22
+bottom_high = 23
+
+top_low = 17
+top_high = 27
+
+MAX_BOTTOM = 10
+MAX_TOP = 5
+
+GPIO.setup(bottom_low, GPIO.OUT)
+GPIO.setup(bottom_high, GPIO.OUT)
+GPIO.setup(top_low, GPIO.OUT)
+GPIO.setup(top_high, GPIO.OUT)
+
+GPIO.output(bottom_low, GPIO.LOW)
+GPIO.output(bottom_high, GPIO.LOW)
+GPIO.output(top_low, GPIO.LOW)
+GPIO.output(top_high, GPIO.LOW)
+
+def GPIO_move(in0, in1, duration):
+    GPIO.output(in0, GPIO.LOW)
+    GPIO.output(in1, GPIO.HIGH)
+    
+    sleep(duration)
+    
+    GPIO.output(in0, GPIO.LOW)
+    GPIO.output(in1, GPIO.LOW)
+    
+def GPIO_stop(in0, in1):
+    GPIO.output(in0, GPIO.LOW)
+    GPIO.output(in1, GPIO.LOW)
 
 def rotate_servo_smooth(servo, start_position, end_position, step):
     for i in range(start_position, end_position):
@@ -42,23 +77,26 @@ def reset_servo(servo, start=True):
   
 def pierce_can():
     print("Piercing the can...")
-    top_linear.max()
-    sleep(2)
+    GPIO_move(top_low, top_high, MAX_TOP)
+    
     print("Retracting piercing servo...")
-    top_linear.min()
+    GPIO_move(top_high, top_low, MAX_TOP)
+    
     print("Done piercing...\n")
     sleep(1)
     
 def setup_cup():
     print("Moving cup to initial position...")
-    bottom_linear.max()
+    GPIO_move(bottom_low, bottom_high, MAX_BOTTOM)
+    
     print("Done moving cup...\n")
     sleep(1)
     
 def tilt_cup():
-    bottom_linear.value = 0.8
+    GPIO_move(bottom_low, bottom_high, MAX_BOTTOM * 0.8)
+    
     sleep(2)
-    bottom_linear.min()
+    GPIO_move(bottom_high, bottom_low, MAX_BOTTOM)
     sleep(1)
     
 def pour():
@@ -112,6 +150,8 @@ def main():
     
     print("Phase 2 complted...")
     print("---------------------------------------------------------------\n\n")
+    
+    GPIO.cleanup()
   
 try:
     main()
