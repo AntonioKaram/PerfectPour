@@ -19,12 +19,15 @@ GPIO.output(in1, GPIO.LOW)
 GPIO.output(in2, GPIO.LOW)
 sleep(5)
 
-print("try1...")
-GPIO.output(in1, GPIO.LOW)
-GPIO.output(in2, GPIO.HIGH)
-sleep(5)
 
-print("try2...")
-GPIO.output(in1, GPIO.HIGH)
-GPIO.output(in2, GPIO.LOW)
-sleep(5)
+while True:
+    user_input = input()
+    
+    if user_input == "w":
+        GPIO.output(in1, GPIO.LOW)
+        GPIO.output(in2, GPIO.HIGH)
+        
+    else:
+        GPIO.output(in1, GPIO.HIGH)
+        GPIO.output(in2, GPIO.LOW)
+
