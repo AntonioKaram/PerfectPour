@@ -23,15 +23,15 @@ i = 0
 print("step 1..")
 
 
-def move(low, high):
+def move(low, high, duration):
     print("moving...")
-    for i in range(30000000):
+    for i in range(duration * 10000000):
         GPIO.output(low, GPIO.LOW)
         GPIO.output(high, GPIO.HIGH)
     
-move(high, low)
-move(low, high)
-move(high, low)
-move(low, high)
-move(high, low)
+# 3 for small
+move(low, high, 5)
+move(high, low, 5)
+move(low, high, 5)
+move(high, low, 5)
 GPIO.cleanup()
