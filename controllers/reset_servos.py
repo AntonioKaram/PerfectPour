@@ -21,7 +21,7 @@ sleep(2)
 
 
 for i in range (20):
-    GPIO.output(in1, GPIO.LOW)
-    GPIO.output(in2, GPIO.HIGH)
+    GPIO.output(in1, GPIO.HIGH)
+    GPIO.output(in2, GPIO.LOW)
     sleep(1)
 
