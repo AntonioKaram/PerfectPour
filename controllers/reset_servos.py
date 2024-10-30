@@ -30,8 +30,8 @@ def move(low, high, duration):
         GPIO.output(high, GPIO.HIGH)
     
 # 3 for small
-move(low, high, 5)
-move(high, low, 5)
-move(low, high, 5)
-move(high, low, 5)
+move(low, high, 4.5)
+move(high, low, 4.5)
+move(low, high, 4.5)
+move(high, low, 4.5)
 GPIO.cleanup()
