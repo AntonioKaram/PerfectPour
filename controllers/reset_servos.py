@@ -19,9 +19,10 @@ GPIO.output(in1, GPIO.LOW)
 GPIO.output(in2, GPIO.LOW)
 sleep(2)
 
-
-for i in range (20):
+i = 0
+while True:
     GPIO.output(in1, GPIO.HIGH)
     GPIO.output(in2, GPIO.LOW)
-    sleep(1)
+    i += 1
+    print(i)
 
