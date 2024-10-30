@@ -4,7 +4,7 @@ from gpiozero.pins.pigpio import PiGPIOFactory
 import RPi.GPIO as GPIO
 from time import sleep
 
-GPIO.setwarnings(True)
+GPIO.setwarnings(False)
 
 in1 = 17
 in2 = 27
@@ -20,15 +20,24 @@ GPIO.output(in2, GPIO.LOW)
 sleep(2)
 
 i = 0
-for i in range(20000000):
-    GPIO.output(in1, GPIO.LOW)
-    GPIO.output(in2, GPIO.HIGH)
-    
-for i in range(20000000):
-    GPIO.output(in1, GPIO.HIGH)
-    GPIO.output(in2, GPIO.LOW)
-    
-for i in range(20000000):
-    GPIO.output(in1, GPIO.LOW)
-    GPIO.output(in2, GPIO.HIGH)
+print("step 1..")
 
+
+def forward():
+    print("forward...")
+    for i in range(22000000):
+        GPIO.output(in1, GPIO.HIGH)
+        GPIO.output(in2, GPIO.LOW)
+        
+
+def backward():
+    print("backwards...")        
+    for i in range(22000000):
+        GPIO.output(in1, GPIO.LOW)
+        GPIO.output(in2, GPIO.HIGH)
+    
+
+forward()
+backward()
+forward()
+backward()
