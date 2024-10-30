@@ -17,10 +17,11 @@ GPIO.setup(in2, GPIO.OUT)
 print("setup..")
 GPIO.output(in1, GPIO.LOW)
 GPIO.output(in2, GPIO.LOW)
-sleep(5)
+sleep(2)
 
 
-while True:
-        GPIO.output(in1, GPIO.LOW)
-        GPIO.output(in2, GPIO.HIGH)
+for i in range (20):
+    GPIO.output(in1, GPIO.LOW)
+    GPIO.output(in2, GPIO.HIGH)
+    sleep(1)
 
