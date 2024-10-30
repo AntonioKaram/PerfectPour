@@ -20,15 +20,15 @@ GPIO.output(in2, GPIO.LOW)
 sleep(2)
 
 i = 0
-for i in range(2000000):
+for i in range(20000000):
     GPIO.output(in1, GPIO.LOW)
     GPIO.output(in2, GPIO.HIGH)
     
-for i in range(2000000):
+for i in range(20000000):
     GPIO.output(in1, GPIO.HIGH)
     GPIO.output(in2, GPIO.LOW)
     
-for i in range(2000000):
+for i in range(20000000):
     GPIO.output(in1, GPIO.LOW)
     GPIO.output(in2, GPIO.HIGH)
 
