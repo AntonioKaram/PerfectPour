@@ -4,7 +4,7 @@ from gpiozero.pins.pigpio import PiGPIOFactory
 import RPi.GPIO as GPIO
 from time import sleep
 
-GPIO.setwarnings(False)
+GPIO.setwarnings(True)
 
 in1 = 17
 in2 = 27
