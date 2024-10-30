@@ -23,16 +23,16 @@ i = 0
 print("step 1..")
 
 
-def forward():
-    print("forward...")
-    for i in range(22000000):
+def backward():
+    print("backwards...")
+    for i in range(30000000):
         GPIO.output(in1, GPIO.HIGH)
         GPIO.output(in2, GPIO.LOW)
         
 
-def backward():
-    print("backwards...")        
-    for i in range(22000000):
+def forward():
+    print("forward...")        
+    for i in range(30000000):
         GPIO.output(in1, GPIO.LOW)
         GPIO.output(in2, GPIO.HIGH)
     
@@ -41,3 +41,4 @@ forward()
 backward()
 forward()
 backward()
+GPIO.cleanup()
