@@ -15,9 +15,8 @@ factory = PiGPIOFactory()
 min_pulse_width = 0.00008  # 0 degrees
 max_pulse_width = 0.0023  # 180 degrees
 
-# Set up rotating servos
-servo1 = Servo(12, pin_factory=factory, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
-servo2 = Servo(13, pin_factory=factory, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
+MAX_BOTTOM = 10
+MAX_TOP = 5
 
 # Set up linear servos
 bottom_low = 22
@@ -26,9 +25,11 @@ bottom_high = 23
 top_low = 17
 top_high = 27
 
-MAX_BOTTOM = 10
-MAX_TOP = 5
+# Set up rotating servos
+servo1 = Servo(12, pin_factory=factory, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
+servo2 = Servo(13, pin_factory=factory, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
 
+# Set up linear servos
 GPIO.setup(bottom_low, GPIO.OUT)
 GPIO.setup(bottom_high, GPIO.OUT)
 GPIO.setup(top_low, GPIO.OUT)

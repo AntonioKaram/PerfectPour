@@ -1,6 +1,4 @@
 
-from gpiozero import Servo
-from gpiozero.pins.pigpio import PiGPIOFactory
 import RPi.GPIO as GPIO # type: ignore
 from time import sleep
 
