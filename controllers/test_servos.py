@@ -26,8 +26,8 @@ bottom_high = 23
 top_low = 17
 top_high = 27
 
-MAX_BOTTOM = 35
-MAX_TOP = 14
+MAX_BOTTOM = 30
+MAX_TOP = 15
 
 GPIO.setup(bottom_low, GPIO.OUT)
 GPIO.setup(bottom_high, GPIO.OUT)
