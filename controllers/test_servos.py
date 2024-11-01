@@ -83,21 +83,27 @@ def bottom():
     pass
 
 def rot():
-    print("Pouring...")
-    thread1 = Thread(target=rotate_servo_smooth, args=(servo1, 0, 180, 0.01))
-    thread2 = Thread(target=rotate_servo_smooth, args=(servo2, 180, 0, 0.01))
+    # print("Pouring...")
+    # thread1 = Thread(target=rotate_servo_smooth, args=(servo1, 0, 180, 0.01))
+    # thread2 = Thread(target=rotate_servo_smooth, args=(servo2, 180, 0, 0.01))
     
-    # Start both threads
-    thread1.start()
-    thread2.start()
+    # # Start both threads
+    # thread1.start()
+    # thread2.start()
     
-    # Wait for both threads to finish
-    thread1.join()
-    thread2.join()
+    # # Wait for both threads to finish
+    # thread1.join()
+    # thread2.join()
     
-    sleep(1)
+    # sleep(1)
     
-    reset()
+    # reset()
+    
+    while True:
+        for i in range(0,360):
+            servo1.value = sin(radians(i))
+            servo2.value = sin(radians(i))
+            sleep(0.01)
     
 def reset():
     reset_servo(servo1)
