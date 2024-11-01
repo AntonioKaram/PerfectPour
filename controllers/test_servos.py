@@ -95,10 +95,10 @@ def rot():
     # reset()
     
     while True:
-        rotate_servo(servo1, 0, 1, 1)
-        rotate_servo(servo2, 1, 0, 1)
-        rotate_servo(servo1, 1, 0, 1)
-        rotate_servo(servo2, 0, 1, 1)
+        rotate_servo(servo1, 0, 1, 0.5)
+        rotate_servo(servo2, 1, 0, 0.5)
+        rotate_servo(servo1, 1, 0, 0.5)
+        rotate_servo(servo2, 0, 1, 0.5)
     
 def reset():
     reset_servo(servo1)
