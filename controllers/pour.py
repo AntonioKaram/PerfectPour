@@ -139,23 +139,6 @@ def pour():
     thread2.join()
     
 def main():
-    print("\n\n---------------------------------------------------------------")
-    print("Starting Setup")
-    print("Aligning Cup...")
-    thread1 = Thread(target=reset_servo, args=(servo1))
-    thread2 = Thread(target=reset_servo, args=(servo2, False))
-    
-    # Start both threads
-    thread1.start()
-    thread2.start()
-    
-    # Wait for both threads to finish
-    thread1.join()
-    thread2.join()
-    
-    print("Setup complted...")
-    print("---------------------------------------------------------------\n\n")
-    
     ## Phase 1 - Pierce can and set up cup
     print("---------------------------------------------------------------")
     print("Starting Phase 1")
