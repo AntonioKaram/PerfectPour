@@ -15,7 +15,7 @@ factory = PiGPIOFactory()
 min_pulse_width = 0.00008  # 0 degrees
 max_pulse_width = 0.0023  # 180 degrees
 
-MAX_BOTTOM = 30
+MAX_BOTTOM = 27
 MAX_TOP = 15
 
 # Set up linear servos
