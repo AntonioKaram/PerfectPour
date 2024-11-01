@@ -159,5 +159,4 @@ while run:
             reset_servo(servo1)
             reset_servo(servo2, False)
             GPIO.cleanup()
-        case _:
-            pass
+        
