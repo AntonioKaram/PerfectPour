@@ -57,6 +57,8 @@ def rotate_servo_smooth(servo, start_position, end_position, step):
         servo.value = sin(radians(i))
         sleep(step)
         
+    servo.value = end_position/180
+        
 def rotate_servo(servo, start_position, end_position, duration):
     steps = 500
     step_delay = duration / steps
