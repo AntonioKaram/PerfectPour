@@ -52,11 +52,6 @@ def GPIO_stop(in0, in1):
     GPIO.output(in0, GPIO.LOW)
     GPIO.output(in1, GPIO.LOW)
 
-def rotate_servo_smooth(servo, start_position, end_position, step):
-    for i in range(start_position, end_position):
-        servo.value = sin(radians(i))
-        sleep(step)
-        
 def rotate_servo(servo, start_position, end_position, duration):
     steps = 500
     step_delay = duration / steps
@@ -84,8 +79,8 @@ def bottom():
 
 def rot():
     # print("Pouring...")
-    # thread1 = Thread(target=rotate_servo_smooth, args=(servo1, 0, 180, 0.01))
-    # thread2 = Thread(target=rotate_servo_smooth, args=(servo2, 180, 0, 0.01))
+    # thread1 = Thread(target=rotate_servo, args=(servo1, 0, 1, 1))
+    # thread2 = Thread(target=rotate_servo, args=(servo2, 1, 0, 1))
     
     # # Start both threads
     # thread1.start()
@@ -100,9 +95,8 @@ def rot():
     # reset()
     
     while True:
-        for i in range(0,180):
-            servo1.value = sin(radians(i))
-            servo2.value = sin(radians(i))
+        rotate_servo(servo1, 0, 1, 1)
+        rotate_servo(servo2, 1, 0, 1)
     
 def reset():
     reset_servo(servo1)
