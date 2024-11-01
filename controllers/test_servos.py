@@ -103,12 +103,6 @@ def reset():
     reset_servo(servo1)
     reset_servo(servo2)
     
-    GPIO_move(top_low, top_high, MAX_TOP)
-    GPIO_move(bottom_low, bottom_high, MAX_BOTTOM)
-    
-    GPIO_move(top_high, top_low, MAX_TOP)
-    GPIO_move(bottom_high, bottom_low, MAX_BOTTOM)
-    
     
 run = True
 while run:
@@ -121,6 +115,7 @@ while run:
     print("3. Rotational (r)")
     print("4. Reset (reset)")
     print("5. Exit (q)")
+    
     
     
     test = input("Which test do you want to run? ")
