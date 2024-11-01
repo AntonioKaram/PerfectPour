@@ -27,7 +27,7 @@ top_low = 17
 top_high = 27
 
 MAX_BOTTOM = 10
-MAX_TOP = 5
+MAX_TOP = 12.5
 
 GPIO.setup(bottom_low, GPIO.OUT)
 GPIO.setup(bottom_high, GPIO.OUT)
@@ -88,6 +88,10 @@ def rot():
 def reset():
     reset_servo(servo1)
     reset_servo(servo2)
+    
+    GPIO_move(top_high, top_low, MAX_TOP)
+    GPIO_move(bottom_high, bottom_low, MAX_BOTTOM)
+    
     
 run = True
 while run:
