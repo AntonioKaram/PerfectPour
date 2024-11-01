@@ -139,7 +139,7 @@ def pour():
     thread2.join()
     
 def main():
-    print("---------------------------------------------------------------")
+    print("\n\n---------------------------------------------------------------")
     print("Starting Setup")
     print("Aligning Cup...")
     thread1 = Thread(target=reset_servo, args=(servo1))
