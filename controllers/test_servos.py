@@ -16,8 +16,8 @@ min_pulse_width = 0.00008  # 0 degrees
 max_pulse_width = 0.0023  # 180 degrees
 
 # Set up rotating servos
-servo1 = Servo(12, pin_factory=factory, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
-servo2 = Servo(13, pin_factory=factory, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
+servo1 = Servo(12, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
+servo2 = Servo(13, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
 
 # Set up linear servos
 bottom_low = 22
@@ -26,8 +26,8 @@ bottom_high = 23
 top_low = 17
 top_high = 27
 
-MAX_BOTTOM = 15
-MAX_TOP = 13
+MAX_BOTTOM = 35
+MAX_TOP = 14
 
 GPIO.setup(bottom_low, GPIO.OUT)
 GPIO.setup(bottom_high, GPIO.OUT)
@@ -123,3 +123,4 @@ while run:
             reset()
         case "q":
             run = False
+            GPIO.cleanup()
