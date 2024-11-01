@@ -84,8 +84,8 @@ def bottom():
 
 def rot():
     print("Pouring...")
-    thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.8, 2))
-    thread2 = Thread(target=rotate_servo, args=(servo2, 1, 0.2, 2))
+    thread1 = Thread(target=rotate_servo, args=(servo1, 0, 1, 2))
+    thread2 = Thread(target=rotate_servo, args=(servo2, 1, 0, 2))
     
     # Start both threads
     thread1.start()
@@ -101,7 +101,7 @@ def rot():
     
 def reset():
     reset_servo(servo1)
-    reset_servo(servo2)
+    reset_servo(servo2,False)
     
     
 run = True
@@ -133,7 +133,7 @@ while run:
         case "q":
             run = False
             reset_servo(servo1)
-            reset_servo(servo2)
+            reset_servo(servo2, False)
             GPIO.cleanup()
         case _:
             pass
