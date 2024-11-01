@@ -103,7 +103,6 @@ def rot():
         for i in range(0,360):
             servo1.value = sin(radians(i))
             servo2.value = sin(radians(i))
-            sleep(0.01)
     
 def reset():
     reset_servo(servo1)
