@@ -100,7 +100,7 @@ def rot():
     # reset()
     
     while True:
-        for i in range(0,360):
+        for i in range(0,180):
             servo1.value = sin(radians(i))
             servo2.value = sin(radians(i))
     
