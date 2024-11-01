@@ -101,19 +101,6 @@ def tilt_cup():
     sleep(1)
     
 def pour():
-    
-    print("Aligning Cup...")
-    thread1 = Thread(target=reset_servo, args=(servo1))
-    thread2 = Thread(target=reset_servo, args=(servo2, False))
-    
-    # Start both threads
-    thread1.start()
-    thread2.start()
-    
-    # Wait for both threads to finish
-    thread1.join()
-    thread2.join()
-    
     print("Pouring...")
     thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.5, 0.1))
     thread2 = Thread(target=rotate_servo, args=(servo2, 1, 0.5, 0.1))
@@ -152,6 +139,18 @@ def pour():
     thread2.join()
     
 def main():
+    
+    print("Aligning Cup...")
+    thread1 = Thread(target=reset_servo, args=(servo1))
+    thread2 = Thread(target=reset_servo, args=(servo2, False))
+    
+    # Start both threads
+    thread1.start()
+    thread2.start()
+    
+    # Wait for both threads to finish
+    thread1.join()
+    thread2.join()
     
     ## Phase 1 - Pierce can and set up cup
     print("---------------------------------------------------------------")

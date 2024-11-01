@@ -117,8 +117,16 @@ def rot():
 
     
 def reset():
+    rotate_servo(servo1, 0, 1)
+    rotate_servo(servo1, 0, 1)
     reset_servo(servo1)
     reset_servo(servo2,False)
+    
+    GPIO_move(top_low, top_high, MAX_TOP)
+    GPIO_move(bottom_low, bottom_high, MAX_BOTTOM)
+    
+    GPIO_move(top_high, top_low, MAX_TOP)
+    GPIO_move(bottom_high, bottom_low, MAX_BOTTOM)
     
     
 run = True
