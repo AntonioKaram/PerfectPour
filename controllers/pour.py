@@ -26,8 +26,8 @@ top_low = 17
 top_high = 27
 
 # Set up rotating servos
-servo1 = Servo(12, pin_factory=factory, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
-servo2 = Servo(13, pin_factory=factory, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
+servo1 = Servo(12, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
+servo2 = Servo(13, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
 
 # Set up linear servos
 GPIO.setup(bottom_low, GPIO.OUT)
@@ -74,7 +74,7 @@ def rotate_servo(servo, start_position, end_position, duration):
         sleep(step_delay)
         
 def reset_servo(servo, start=True):
-    servo.min() if start else servo.max()
+    servo.value = 0 if start else 1
   
 def pierce_can():
     print("Piercing the can...")
@@ -101,6 +101,19 @@ def tilt_cup():
     sleep(1)
     
 def pour():
+    
+    print("Aligning Cup...")
+    thread1 = Thread(target=reset_servo, args=(servo1))
+    thread2 = Thread(target=reset_servo, args=(servo2, False))
+    
+    # Start both threads
+    thread1.start()
+    thread2.start()
+    
+    # Wait for both threads to finish
+    thread1.join()
+    thread2.join()
+    
     print("Pouring...")
     thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.5, 0.1))
     thread2 = Thread(target=rotate_servo, args=(servo2, 1, 0.5, 0.1))
