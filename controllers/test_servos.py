@@ -68,7 +68,7 @@ def rotate_servo(servo, start_position, end_position, duration):
         sleep(step_delay)
         
 def reset_servo(servo, start=True):
-    servo.min() if start else servo.max()
+    servo.value = 0 if start else 1
 
 
 def top():
