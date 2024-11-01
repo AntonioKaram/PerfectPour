@@ -84,8 +84,8 @@ def bottom():
 
 def rot():
     print("Pouring...")
-    thread1 = Thread(target=rotate_servo, args=(servo1, 0, 1, 2))
-    thread2 = Thread(target=rotate_servo, args=(servo2, 1, 0, 2))
+    thread1 = Thread(target=rotate_servo_smooth, args=(servo1, 0, 180, 2))
+    thread2 = Thread(target=rotate_servo_smooth, args=(servo2, 180, 0, 2))
     
     # Start both threads
     thread1.start()
@@ -96,6 +96,8 @@ def rot():
     thread2.join()
     
     sleep(1)
+    
+    reset()
     
     
     
