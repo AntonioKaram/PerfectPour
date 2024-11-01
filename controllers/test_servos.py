@@ -85,7 +85,7 @@ def bottom():
     pass
 
 def rot():
-    rotate_servo_smooth(servo1, 0, 180, 0.01)
+    rotate_servo_smooth(servo1, 180, 0, 0.01)
     rotate_servo_smooth(servo2, 0, 180, 0.01)
     
     
