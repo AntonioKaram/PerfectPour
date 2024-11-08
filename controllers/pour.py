@@ -90,7 +90,7 @@ def setup_cup():
     print("Moving cup to initial position...")
     GPIO_move(bottom_low, bottom_high, MAX_BOTTOM)
     
-    print("Done moving cup...\n")
+    print("Done moving cup...")
     sleep(1)
     
 def tilt_cup():

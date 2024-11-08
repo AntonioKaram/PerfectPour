@@ -30,7 +30,7 @@ threading.Thread(target=release_lock_after_timeout, daemon=True).start()
 
 # Background function to run the servo control script
 def run_servo_script():
-    os.system('python3 ../controllers/start.py')
+    os.system('python3 ../controllers/pour.py')
 
 @app.route('/')
 def home():
