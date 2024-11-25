@@ -1,9 +1,8 @@
 from time import sleep
-from math import sin, radians
 from gpiozero import Servo
-from threading import Thread
-import RPi.GPIO as GPIO # type: ignore
 from gpiozero.pins.pigpio import PiGPIOFactory
+import RPi.GPIO as GPIO
+from threading import Thread
 
 # Initialize GPIO
 GPIO.setwarnings(False)
@@ -16,152 +15,88 @@ min_pulse_width = 0.00008  # 0 degrees
 max_pulse_width = 0.0023  # 180 degrees
 
 # Set up rotating servos
-servo1 = Servo(12, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width, initial_value=None)
-servo2 = Servo(13, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width, initial_value=None)
+servo1 = Servo(12, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
+servo2 = Servo(13, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
 
-# Set up linear servos
-bottom_low = 22
-bottom_high = 23
+# Initial positions
+servo1.value = 0  # Center position
+servo2.value = 0  # Center position
 
-top_low = 17
-top_high = 27
 
-MAX_BOTTOM = 27
-MAX_TOP = 15
+def rotate_to_position(servo, target_position):
+    """Smoothly move a servo to a specified position."""
+    current_position = servo.value if servo.value is not None else 0
+    steps = 50
+    step_size = (target_position - current_position) / steps
+    step_delay = 0.02  # Adjust as needed for smoother motion
 
-GPIO.setup(bottom_low, GPIO.OUT)
-GPIO.setup(bottom_high, GPIO.OUT)
-GPIO.setup(top_low, GPIO.OUT)
-GPIO.setup(top_high, GPIO.OUT)
-
-GPIO.output(bottom_low, GPIO.LOW)
-GPIO.output(bottom_high, GPIO.LOW)
-GPIO.output(top_low, GPIO.LOW)
-GPIO.output(top_high, GPIO.LOW)
-
-def GPIO_move(in0, in1, duration):
-    GPIO.output(in0, GPIO.LOW)
-    GPIO.output(in1, GPIO.HIGH)
-    
-    sleep(duration)
-    
-    GPIO.output(in0, GPIO.LOW)
-    GPIO.output(in1, GPIO.LOW)
-    
-def GPIO_stop(in0, in1):
-    GPIO.output(in0, GPIO.LOW)
-    GPIO.output(in1, GPIO.LOW)
-
-def rotate_servo(servo, start_position, end_position, duration):
-    steps = 500
-    step_delay = duration / steps
-    step_size = (end_position - start_position) / steps
-    
-    for i in range(steps + 1):
-        position = start_position + i * step_size
-        if position < 0:
-            servo.min()
-        elif position > 1:
-            servo.max()
-        else:
-            servo.value = position
+    for step in range(steps + 1):
+        position = current_position + step * step_size
+        servo.value = max(-1, min(1, position))  # Clamp between -1 and 1
         sleep(step_delay)
-        
-def reset_servo(servo, start=True):
-    servo.value = 0 if start else 1
 
-def get_servo_position(servo):
-    # Returns the current position of the servo, scaled from -1 to 1
-    position = servo.value
-    print(f"Current position of servo on pin {servo}: {position}")
-    return position
 
-def top():
-    GPIO_move(top_low, top_high, 5)
-    GPIO_move(top_high, top_low, 5)
-    
+def control_rotational_servos():
+    """Control servos interactively."""
+    while True:
+        print(f"\nCurrent Positions: Servo1: {servo1.value}, Servo2: {servo2.value}")
+        input_position = input("Enter target position (-1.0 to 1.0) for Servo1 (or 'q' to quit): ")
 
-def bottom():
-    pass
+        if input_position.lower() == 'q':
+            print("Exiting control mode.")
+            break
 
-def rot():
-    print("Pouring...")
-    thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.5, 0.1))
-    thread2 = Thread(target=rotate_servo, args=(servo2, 1, 0.5, 0.1))
-    
-    # Start both threads
-    thread1.start()
-    thread2.start()
-    
-    # Wait for both threads to finish
-    thread1.join()
-    thread2.join()
-    
-    thread1 = Thread(target=rotate_servo, args=(servo1, 0.5, 1, 1))
-    thread2 = Thread(target=rotate_servo, args=(servo2, 0.5, 0, 1))
-    
-    # Start both threads
-    thread1.start()
-    thread2.start()
-    
-    # Wait for both threads to finish
-    thread1.join()
-    thread2.join()
-    
-    sleep(7)
-    
-    print("Resetting...")
-    thread1 = Thread(target=rotate_servo, args=(servo1, 1, 0, 1))
-    thread2 = Thread(target=rotate_servo, args=(servo2, 0, 1, 1))
-    
-    # Start both threads
-    thread1.start()
-    thread2.start()
-    
-    # Wait for both threads to finish
-    thread1.join()
-    thread2.join()
+        try:
+            target_position1 = float(input_position)
+            if not -1.0 <= target_position1 <= 1.0:
+                raise ValueError("Position out of range.")
+        except ValueError as e:
+            print(f"Invalid input: {e}")
+            continue
 
-    
-def reset():
-    rotate_servo(servo1, 0, 1, 0.01)
-    rotate_servo(servo1, 0, 1, 0.01)
-    reset_servo(servo1)
-    reset_servo(servo2,False)
+        target_position2 = -target_position1  # Opposite direction for servo2
+        print(f"Moving Servo1 to {target_position1} and Servo2 to {target_position2}...")
 
-    
-    
+        thread1 = Thread(target=rotate_to_position, args=(servo1, target_position1))
+        thread2 = Thread(target=rotate_to_position, args=(servo2, target_position2))
+
+        thread1.start()
+        thread2.start()
+
+        thread1.join()
+        thread2.join()
+
+        print("Movement complete.")
+
+
+def reset_servos():
+    """Reset both servos to the default positions."""
+    rotate_to_position(servo1, 0)
+    rotate_to_position(servo2, 0)
+    print("Servos reset to the center position.")
+
+
+# Main program loop
 run = True
 while run:
-    print("----------------------------------------------")
+    print("\n----------------------------------------------")
     print("-----------------TEST MODULE------------------")
     print("----------------------------------------------")
     print("Options")
-    print("1. top linear (t)")
-    print("2. bottom linear (b)")
-    print("3. Rotational (r)")
-    print("4. Reset (reset)")
-    print("5. Get Servo Positions (pos)")
-    print("6. Exit (q)")
-    
-    
+    print("1. Control Rotational Servos (r)")
+    print("2. Reset Servos (reset)")
+    print("3. Exit (q)")
+
     test = input("Which test do you want to run? ")
-    
-    
+
     match test:
-        case "t":
-            top()
-        case "b":
-            bottom()
         case "r":
-            rot()
+            control_rotational_servos()
         case "reset":
-            reset()
-        case "pos":
-            get_servo_position(servo1)
-            get_servo_position(servo2)
+            reset_servos()
         case "q":
             run = False
-            reset_servo(servo1)
-            reset_servo(servo2, False)
+            reset_servos()
             GPIO.cleanup()
+        case _:
+            print("Invalid option. Please try again.")
