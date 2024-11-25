@@ -117,7 +117,7 @@ def rot():
 
     
 def reset():
-    rotate_servo(servo1, 0, 2, 0.01)
+    rotate_servo(servo1, 0, 0.5, 0.01)
     #rotate_servo(servo2, 1, 0, 0.01)
 
     
