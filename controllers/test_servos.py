@@ -16,8 +16,8 @@ min_pulse_width = 0.00008  # 0 degrees
 max_pulse_width = 0.0023  # 180 degrees
 
 # Set up rotating servos
-servo1 = Servo(12, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
-servo2 = Servo(13, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
+servo1 = Servo(12, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width, initial_value=None)
+servo2 = Servo(13, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width, initial_value=None)
 
 # Set up linear servos
 bottom_low = 22
@@ -118,7 +118,7 @@ def rot():
     
 def reset():
     rotate_servo(servo1, 0, 1, 0.01)
-    rotate_servo(servo1, 0, 1, 0.01)
+    rotate_servo(servo2, 1, 0, 0.01)
     reset_servo(servo1)
     reset_servo(servo2,False)
 
