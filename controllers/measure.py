@@ -73,7 +73,7 @@ def reset_servo(servo, start=True):
 def get_servo_position(servo):
     # Returns the current position of the servo, scaled from -1 to 1
     position = servo.value
-    print(f"Current position of servo on pin {servo.pin}: {position}")
+    print(f"Current position of servo on pin {servo}: {position}")
     return position
 
 def top():
