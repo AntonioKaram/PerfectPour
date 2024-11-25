@@ -77,7 +77,9 @@ def get_servo_position(servo):
     return position
 
 def top():
-    pass
+    GPIO_move(top_low, top_high, 5)
+    GPIO_move(top_high, top_low, 5)
+    
 
 def bottom():
     pass
