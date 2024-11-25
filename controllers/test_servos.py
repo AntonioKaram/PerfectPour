@@ -149,7 +149,5 @@ while run:
             reset()
         case "q":
             run = False
-            reset_servo(servo1)
-            reset_servo(servo2, False)
             GPIO.cleanup()
         
