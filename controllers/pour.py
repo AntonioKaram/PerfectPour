@@ -26,7 +26,7 @@ top_low = 17
 top_high = 27
 
 # Set up rotating servos
-servo1 = Servo(12, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
+#servo1 = Servo(12, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
 servo2 = Servo(13, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
 
 # Set up linear servos
@@ -103,55 +103,55 @@ def tilt_cup():
 def pour():
     sleep(MAX_BOTTOM*0.15)
     print("Pouring...")
-    thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.5, 0.1))
-    thread2 = Thread(target=rotate_servo, args=(servo2, 1, 0.5, 0.1))
+    # thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.5, 0.1))
+    thread2 = Thread(target=rotate_servo, args=(servo2, 0, 0.15, 0.1))
     
     # Start both threads
-    thread1.start()
+    # thread1.start()
     thread2.start()
     
     # Wait for both threads to finish
-    thread1.join()
+    # thread1.join()
     thread2.join()
     
-    thread1 = Thread(target=rotate_servo, args=(servo1, 0.5, 1, 1))
-    thread2 = Thread(target=rotate_servo, args=(servo2, 0.5, 0, 1))
+    # thread1 = Thread(target=rotate_servo, args=(servo1, 0.5, 1, 1))
+    thread2 = Thread(target=rotate_servo, args=(servo2, 0.15, 0.3, 1))
     
     # Start both threads
-    thread1.start()
+    # thread1.start()
     thread2.start()
     
     # Wait for both threads to finish
-    thread1.join()
+    # thread1.join()
     thread2.join()
     
     sleep(7)
     
     print("Resetting...")
-    thread1 = Thread(target=rotate_servo, args=(servo1, 1, 0, 1))
-    thread2 = Thread(target=rotate_servo, args=(servo2, 0, 1, 1))
+    # thread1 = Thread(target=rotate_servo, args=(servo1, 1, 0, 1))
+    thread2 = Thread(target=rotate_servo, args=(servo2, 0.3, 0, 1))
     
     # Start both threads
-    thread1.start()
+    # thread1.start()
     thread2.start()
     
     # Wait for both threads to finish
-    thread1.join()
+    # thread1.join()
     thread2.join()
     
 def main():
     print("\n\n---------------------------------------------------------------")
     print("Starting Setup")
     print("Aligning Cup...")
-    thread1 = Thread(target=reset_servo, args=(servo1))
-    thread2 = Thread(target=reset_servo, args=(servo2, False))
+    # thread1 = Thread(target=reset_servo, args=(servo1))
+    thread2 = Thread(target=reset_servo, args=(servo2))
     
     # Start both threads
-    thread1.start()
+    # thread1.start()
     thread2.start()
     
     # Wait for both threads to finish
-    thread1.join()
+    # thread1.join()
     thread2.join()
     
     print("Setup complted...")
