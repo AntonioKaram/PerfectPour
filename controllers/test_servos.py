@@ -75,7 +75,7 @@ def top():
     pass
 
 def bottom():
-    pass
+    GPIO_move(bottom_low, bottom_high, MAX_BOTTOM)
 
 def rot():
     print("Pouring...")
