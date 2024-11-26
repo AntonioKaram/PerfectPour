@@ -116,10 +116,10 @@ def rot():
 
     
 def reset():
-    rotate_servo(servo2, 0, 0.15, 0.1)
-    sleep(1)
-    rotate_servo(servo2, 0.15, 0.3, 0.01)
-    sleep(1)
+    rotate_servo(servo2, 0, 0.1, 0.1)
+    sleep(2)
+    rotate_servo(servo2, 0.1, 0.3, 0.01)
+    sleep(2)
     rotate_servo(servo2, 0.3, 0, 0.01)
     
     
