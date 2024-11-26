@@ -117,6 +117,9 @@ def rot():
     
 def reset():
     servo2.value = 0
+    servo2.value = 1
+    servo2.value = -1
+    
     GPIO.cleanup()
     rotate_servo(servo2, 0, 0.1, 0.1)
     sleep(2)
