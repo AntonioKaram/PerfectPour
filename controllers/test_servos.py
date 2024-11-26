@@ -16,7 +16,7 @@ min_pulse_width = 0.00008  # 0 degrees
 max_pulse_width = 0.0023  # 180 degrees
 
 # Set up rotating servos
-servo1 = Servo(12, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width, initial_value=None)
+#servo1 = Servo(12, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width, initial_value=None)
 servo2 = Servo(13, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width, initial_value=None)
 
 # Set up linear servos
@@ -75,44 +75,44 @@ def top():
     pass
 
 def bottom():
-    GPIO_move(bottom_low, bottom_high, MAX_BOTTOM)
+    GPIO_move(bottom_high, bottom_low, MAX_BOTTOM)
 
 def rot():
     print("Pouring...")
-    thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.5, 0.1))
+    # thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.5, 0.1))#
     thread2 = Thread(target=rotate_servo, args=(servo2, 1, 0.5, 0.1))
     
     # Start both threads
-    thread1.start()
+    # thread1.start()
     thread2.start()
     
     # Wait for both threads to finish
-    thread1.join()
+    # thread1.join()
     thread2.join()
     
-    thread1 = Thread(target=rotate_servo, args=(servo1, 0.5, 1, 1))
+    # thread1 = Thread(target=rotate_servo, args=(servo1, 0.5, 1, 1))
     thread2 = Thread(target=rotate_servo, args=(servo2, 0.5, 0, 1))
     
     # Start both threads
-    thread1.start()
+    # thread1.start()
     thread2.start()
     
     # Wait for both threads to finish
-    thread1.join()
+    # thread1.join()
     thread2.join()
     
     sleep(7)
     
     print("Resetting...")
-    thread1 = Thread(target=rotate_servo, args=(servo1, 1, 0, 1))
+    # thread1 = Thread(target=rotate_servo, args=(servo1, 1, 0, 1))
     thread2 = Thread(target=rotate_servo, args=(servo2, 0, 1, 1))
     
     # Start both threads
-    thread1.start()
+    # thread1.start()
     thread2.start()
     
     # Wait for both threads to finish
-    thread1.join()
+    # thread1.join()
     thread2.join()
 
     
