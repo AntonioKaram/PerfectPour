@@ -121,6 +121,9 @@ def reset():
     rotate_servo(servo2, 0.1, 0.3, 0.01)
     sleep(2)
     rotate_servo(servo2, 0.3, 0.1, 0.01)
+    sleep(2)
+    rotate_servo(servo2, 0.3, 0.1, 0.01)
+    servo2.value = None
     
     
 
