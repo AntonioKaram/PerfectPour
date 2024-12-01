@@ -123,7 +123,6 @@ while run:
             reset_servos()
         case "q":
             run = False
-            reset_servos()
             pi.stop()
         case _:
             print("Invalid option. Please try again.")
