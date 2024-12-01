@@ -25,9 +25,7 @@ SERVO2_CALIBRATION = {
     'CENTER': 1190
 }
 
-# Servo initialization
-pi.set_servo_pulsewidth(SERVO1_PIN, SERVO1_CALIBRATION['CENTER'])
-pi.set_servo_pulsewidth(SERVO2_PIN, SERVO2_CALIBRATION['CENTER'])
+
 
 # Then modify calculate_pulse_width to accept calibration values
 def calculate_pulse_width(position, calibration):
@@ -106,6 +104,15 @@ def reset_servos():
     smooth_move_servo(SERVO1_PIN, -1, -1, SERVO1_CALIBRATION)
     smooth_move_servo(SERVO2_PIN, 0.0, -1, SERVO2_CALIBRATION)
     print("Servos reset.")
+    
+    
+    
+servo1_pulse = calculate_pulse_width(-1.0, SERVO1_CALIBRATION)
+servo2_pulse = calculate_pulse_width(-1.0, SERVO2_CALIBRATION)
+
+# Set servos to starting position
+pi.set_servo_pulsewidth(SERVO1_PIN, servo1_pulse)
+pi.set_servo_pulsewidth(SERVO2_PIN, servo2_pulse)
 
 # Main program loop
 run = True
