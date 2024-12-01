@@ -14,7 +14,7 @@ SERVO2_PIN = 13
 
 # Individual servo calibration
 SERVO1_CALIBRATION = {
-    'MIN': 0,
+    'MIN': 800,
     'MAX': 2300,
     'CENTER': 1190
 }
