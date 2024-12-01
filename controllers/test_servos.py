@@ -108,7 +108,7 @@ def reset_servos():
     
     
 servo1_pulse = calculate_pulse_width(-1.0, SERVO1_CALIBRATION)
-servo2_pulse = calculate_pulse_width(1.0, SERVO2_CALIBRATION)
+servo2_pulse = calculate_pulse_width(-1.0, SERVO2_CALIBRATION)
 
 # Set servos to starting position
 pi.set_servo_pulsewidth(SERVO1_PIN, servo1_pulse)
