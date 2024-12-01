@@ -13,110 +13,32 @@ SERVO1_PIN = 12
 SERVO2_PIN = 13
 
 # Servo pulse width range (microseconds)
-MIN_PULSE_WIDTH = 500   # Corresponds to -90 degrees
-MAX_PULSE_WIDTH = 2500  # Corresponds to +90 degrees
-CENTER_PULSE_WIDTH = 1500  # Neutral (0 degrees)
+MIN_PULSE_WIDTH = 500    # Corresponds to -90 degrees
+MAX_PULSE_WIDTH = 2500   # Corresponds to +90 degrees
 
-# Servo initialization
-pi.set_servo_pulsewidth(SERVO1_PIN, CENTER_PULSE_WIDTH)
-pi.set_servo_pulsewidth(SERVO2_PIN, CENTER_PULSE_WIDTH)
+def set_servo_angle(servo_pin, angle):
+    # Map angle (-90 to 90) to pulse width
+    pulsewidth = ((angle + 90) * (MAX_PULSE_WIDTH - MIN_PULSE_WIDTH) / 180) + MIN_PULSE_WIDTH
+    pi.set_servo_pulsewidth(servo_pin, pulsewidth)
 
-def calculate_pulse_width(position):
-    """
-    Convert a normalized servo position (-1.0 to 1.0) to pulse width.
-    """
-    if position < -1.0 or position > 1.0:
-        raise ValueError("Position must be between -1.0 and 1.0.")
-    return int(CENTER_PULSE_WIDTH + position * (MAX_PULSE_WIDTH - CENTER_PULSE_WIDTH) / 2)
+def main():
+    try:
+        while True:
+            angle_input = input("Enter servo angle (-90 to 90 degrees) or 'exit' to quit: ")
+            if angle_input.lower() == 'exit':
+                break
+            angle = float(angle_input)
+            if -90 <= angle <= 90:
+                set_servo_angle(SERVO1_PIN, angle)
+                set_servo_angle(SERVO2_PIN, angle)
+            else:
+                print("Please enter an angle between -90 and 90 degrees.")
+    except KeyboardInterrupt:
+        pass
+    finally:
+        pi.set_servo_pulsewidth(SERVO1_PIN, 0)
+        pi.set_servo_pulsewidth(SERVO2_PIN, 0)
+        pi.stop()
 
-def smooth_move_servo(pin, start_position, target_position, steps=50, delay=0.02):
-    """
-    Move a servo smoothly from start_position to target_position.
-    - `start_position` and `target_position` are normalized values (-1.0 to 1.0).
-    - `steps` determines the granularity of the movement.
-    - `delay` is the time between each step.
-    """
-    start_pulse = calculate_pulse_width(start_position)
-    target_pulse = calculate_pulse_width(target_position)
-    step_size = (target_pulse - start_pulse) / steps
-
-    for step in range(steps + 1):
-        pulse = start_pulse + step * step_size
-        pi.set_servo_pulsewidth(pin, int(pulse))
-        sleep(delay)
-
-def control_rotational_servos():
-    """
-    Interactive control for the rotational servos.
-    """
-    current_position1 = 0.0  # Start at center position
-    current_position2 = 0.0  # Start at center position
-
-    while True:
-        print(f"\nCurrent Positions: Servo1: {current_position1:.2f}, Servo2: {current_position2:.2f}")
-        input_position = input("Enter target position (-1.0 to 1.0) for Servo1 (or 'q' to quit): ")
-
-        if input_position.lower() == 'q':
-            print("Exiting control mode.")
-            break
-
-        try:
-            target_position1 = float(input_position)
-            if not -1.0 <= target_position1 <= 1.0:
-                raise ValueError("Position out of range.")
-        except ValueError as e:
-            print(f"Invalid input: {e}")
-            continue
-
-        # Opposite position for Servo2
-        target_position2 = -target_position1
-        print(f"Moving Servo1 to {target_position1:.2f} and Servo2 to {target_position2:.2f}...")
-
-        thread1 = Thread(target=smooth_move_servo, args=(SERVO1_PIN, current_position1, target_position1))
-        thread2 = Thread(target=smooth_move_servo, args=(SERVO2_PIN, current_position2, target_position2))
-
-        thread1.start()
-        thread2.start()
-
-        thread1.join()
-        thread2.join()
-
-        # Update current positions
-        current_position1 = target_position1
-        current_position2 = target_position2
-
-        print("Movement complete.")
-
-def reset_servos():
-    """
-    Reset both servos to the center (neutral) position.
-    """
-    print("Resetting servos to center position...")
-    smooth_move_servo(SERVO1_PIN, 0.0, 0.0)
-    smooth_move_servo(SERVO2_PIN, 0.0, 0.0)
-    print("Servos reset.")
-
-# Main program loop
-run = True
-while run:
-    print("\n----------------------------------------------")
-    print("-----------------TEST MODULE------------------")
-    print("----------------------------------------------")
-    print("Options")
-    print("1. Control Rotational Servos (r)")
-    print("2. Reset Servos (reset)")
-    print("3. Exit (q)")
-
-    test = input("Which test do you want to run? ")
-
-    match test:
-        case "r":
-            control_rotational_servos()
-        case "reset":
-            reset_servos()
-        case "q":
-            run = False
-            reset_servos()
-            pi.stop()
-        case _:
-            print("Invalid option. Please try again.")
+if __name__ == "__main__":
+    main()
