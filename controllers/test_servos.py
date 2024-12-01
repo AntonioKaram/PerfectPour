@@ -24,10 +24,17 @@ pi.set_servo_pulsewidth(SERVO2_PIN, CENTER_PULSE_WIDTH)
 def calculate_pulse_width(position):
     """
     Convert a normalized servo position (-1.0 to 1.0) to pulse width.
+    Full 180-degree range: -1.0 = -90°(800μs), 0 = 0°(1190μs), 1.0 = +90°(2300μs)
     """
     if position < -1.0 or position > 1.0:
-        raise ValueError("Position must be between -1.0 and 1.0.")
-    return int(CENTER_PULSE_WIDTH + position * (MAX_PULSE_WIDTH - CENTER_PULSE_WIDTH) / 2)
+        raise ValueError("Position must be between -1.0 and 1.0")
+        
+    if position <= 0:
+        # Map -1.0 -> 0.0 to MIN_PULSE_WIDTH -> CENTER_PULSE_WIDTH
+        return int(CENTER_PULSE_WIDTH + position * (CENTER_PULSE_WIDTH - MIN_PULSE_WIDTH))
+    else:
+        # Map 0.0 -> 1.0 to CENTER_PULSE_WIDTH -> MAX_PULSE_WIDTH
+        return int(CENTER_PULSE_WIDTH + position * (MAX_PULSE_WIDTH - CENTER_PULSE_WIDTH))
 
 def smooth_move_servo(pin, start_position, target_position, steps=50, delay=0.02):
     """
