@@ -39,15 +39,16 @@ def calculate_pulse_width(position, calibration):
     else:
         return int(calibration['CENTER'] + position * (calibration['MAX'] - calibration['CENTER']))
 
-def smooth_move_servo(pin, start_position, target_position, steps=50, delay=0.02):
+def smooth_move_servo(pin, start_position, target_position, calibration, steps=50, delay=0.02):
     """
     Move a servo smoothly from start_position to target_position.
     - `start_position` and `target_position` are normalized values (-1.0 to 1.0).
+    - `calibration` is the calibration dictionary for the servo.
     - `steps` determines the granularity of the movement.
     - `delay` is the time between each step.
     """
-    start_pulse = calculate_pulse_width(start_position)
-    target_pulse = calculate_pulse_width(target_position)
+    start_pulse = calculate_pulse_width(start_position, calibration)
+    target_pulse = calculate_pulse_width(target_position, calibration)
     step_size = (target_pulse - start_pulse) / steps
 
     for step in range(steps + 1):
@@ -82,8 +83,8 @@ def control_rotational_servos():
         target_position2 = -target_position1
         print(f"Moving Servo1 to {target_position1:.2f} and Servo2 to {target_position2:.2f}...")
 
-        thread1 = Thread(target=smooth_move_servo, args=(SERVO1_PIN, current_position1, target_position1))
-        thread2 = Thread(target=smooth_move_servo, args=(SERVO2_PIN, current_position2, target_position2))
+        thread1 = Thread(target=smooth_move_servo, args=(SERVO1_PIN, current_position1, target_position1, SERVO1_CALIBRATION))
+        thread2 = Thread(target=smooth_move_servo, args=(SERVO2_PIN, current_position2, target_position2, SERVO2_CALIBRATION))
 
         thread1.start()
         thread2.start()
@@ -102,8 +103,8 @@ def reset_servos():
     Reset both servos to the center (neutral) position.
     """
     print("Resetting servos to center position...")
-    smooth_move_servo(SERVO1_PIN, 0.0, 0.0)
-    smooth_move_servo(SERVO2_PIN, 0.0, 0.0)
+    smooth_move_servo(SERVO1_PIN, 0.0, 0.0, SERVO1_CALIBRATION)
+    smooth_move_servo(SERVO2_PIN, 0.0, 0.0, SERVO2_CALIBRATION)
     print("Servos reset.")
 
 # Main program loop
