@@ -25,10 +25,6 @@ SERVO2_CALIBRATION = {
     'CENTER': 1190
 }
 
-# Servo initialization
-pi.set_servo_pulsewidth(SERVO1_PIN, SERVO1_CALIBRATION['CENTER'])
-pi.set_servo_pulsewidth(SERVO2_PIN, SERVO2_CALIBRATION['CENTER'])
-
 # Then modify calculate_pulse_width to accept calibration values
 def calculate_pulse_width(position, calibration):
     if position < -1.0 or position > 1.0:
@@ -38,6 +34,12 @@ def calculate_pulse_width(position, calibration):
         return int(calibration['CENTER'] + position * (calibration['CENTER'] - calibration['MIN']))
     else:
         return int(calibration['CENTER'] + position * (calibration['MAX'] - calibration['CENTER']))
+
+
+# Servo initialization
+pi.set_servo_pulsewidth(SERVO1_PIN, calculate_pulse_width(-1.0, SERVO1_CALIBRATION))
+pi.set_servo_pulsewidth(SERVO2_PIN, calculate_pulse_width(-1.0, SERVO2_CALIBRATION))
+
 
 def smooth_move_servo(pin, start_position, target_position, calibration, steps=50, delay=0.02):
     """
@@ -57,46 +59,28 @@ def smooth_move_servo(pin, start_position, target_position, calibration, steps=5
         sleep(delay)
 
 def control_rotational_servos():
-    """
-    Interactive control for the rotational servos.
-    """
-    current_position1 = 0.0  # Start at center position
-    current_position2 = 0.0  # Start at center position
-
+    # Set initial position to -1
+    current_position = -1.0
+    
     while True:
-        print(f"\nCurrent Positions: Servo1: {current_position1:.2f}, Servo2: {current_position2:.2f}")
-        input_position = input("Enter target position (-1.0 to 1.0) for Servo1 (or 'q' to quit): ")
-
-        if input_position.lower() == 'q':
-            print("Exiting control mode.")
-            break
-
         try:
-            target_position1 = float(input_position)
-            if not -1.0 <= target_position1 <= 1.0:
-                raise ValueError("Position out of range.")
-        except ValueError as e:
-            print(f"Invalid input: {e}")
-            continue
-
-        # Opposite position for Servo2
-        target_position2 = -target_position1
-        print(f"Moving Servo1 to {target_position1:.2f} and Servo2 to {target_position2:.2f}...")
-
-        thread1 = Thread(target=smooth_move_servo, args=(SERVO1_PIN, current_position1, target_position1, SERVO1_CALIBRATION))
-        thread2 = Thread(target=smooth_move_servo, args=(SERVO2_PIN, current_position2, target_position2, SERVO2_CALIBRATION))
-
-        thread1.start()
-        thread2.start()
-
-        thread1.join()
-        thread2.join()
-
-        # Update current positions
-        current_position1 = target_position1
-        current_position2 = target_position2
-
-        print("Movement complete.")
+            # Get user input for new position (-1.0 to 1.0)
+            new_position = float(input("Enter position (-1.0 to 1.0, or 'q' to quit): "))
+            if new_position < -1.0 or new_position > 1.0:
+                print("Position must be between -1.0 and 1.0")
+                continue
+                
+            # Move both servos to new position
+            smooth_move_servo(SERVO1_PIN, current_position, new_position, SERVO1_CALIBRATION)
+            smooth_move_servo(SERVO2_PIN, current_position, new_position, SERVO2_CALIBRATION)
+            current_position = new_position
+            
+        except ValueError:
+            print("Invalid input. Please enter a number between -1.0 and 1.0")
+        except KeyboardInterrupt:
+            # Return servos to -1 position on exit
+            smooth_move_servo(SERVO1_PIN, current_position, -1.0, SERVO1_CALIBRATION)
+            smooth_move_servo(SERVO2_PIN, current_position, -1.0, SERVO2_CALIBRATION)
 
 def reset_servos():
     """
