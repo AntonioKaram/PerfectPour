@@ -13,9 +13,9 @@ SERVO1_PIN = 12
 SERVO2_PIN = 13
 
 # Servo pulse width range (microseconds)
-MIN_PULSE_WIDTH = 0.00008   # Corresponds to -90 degrees
-MAX_PULSE_WIDTH = 0.0023  # Corresponds to +90 degrees
-CENTER_PULSE_WIDTH = 0.00119  # Neutral (0 degrees)
+MIN_PULSE_WIDTH = 800   # Corresponds to -90 degrees
+MAX_PULSE_WIDTH = 2300  # Corresponds to +90 degrees
+CENTER_PULSE_WIDTH = 1190  # Neutral (0 degrees)
 
 # Servo initialization
 pi.set_servo_pulsewidth(SERVO1_PIN, CENTER_PULSE_WIDTH)
