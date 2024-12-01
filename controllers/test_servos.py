@@ -1,141 +1,138 @@
-import time
+from time import sleep
+from threading import Thread
 import pigpio
-import signal
-import sys
-
-# Constants
-SERVO1_PIN = 12  # GPIO pin for first servo
-SERVO2_PIN = 13  # GPIO pin for second servo
-
-# Calibration values (adjust these for your servos)
-SERVO1_CALIBRATION = {
-    'min_pulse': 500,
-    'max_pulse': 2500,
-    'center_pulse': 1500
-}
-
-SERVO2_CALIBRATION = {
-    'min_pulse': 500,
-    'max_pulse': 2500,
-    'center_pulse': 1500
-}
 
 # Initialize pigpio
 pi = pigpio.pi()
+
 if not pi.connected:
-    print("Error: Unable to connect to pigpio daemon")
-    sys.exit(1)
+    raise RuntimeError("Failed to connect to pigpio daemon. Ensure `pigpiod` is running.")
 
-def cleanup(signum, frame):
-    """Cleanup GPIO on exit"""
-    print("\nCleaning up...")
-    pi.set_servo_pulsewidth(SERVO1_PIN, 0)
-    pi.set_servo_pulsewidth(SERVO2_PIN, 0)
-    pi.stop()
-    sys.exit(0)
+# GPIO Pins for the servos
+SERVO1_PIN = 12
+SERVO2_PIN = 13
 
-signal.signal(signal.SIGINT, cleanup)
+# Individual servo calibration
+SERVO1_CALIBRATION = {
+    'MIN': 800,
+    'MAX': 2300,
+    'CENTER': 1190
+}
 
+SERVO2_CALIBRATION = {
+    'MIN': 800,
+    'MAX': 2300,
+    'CENTER': 1190
+}
+
+# Then modify calculate_pulse_width to accept calibration values
 def calculate_pulse_width(position, calibration):
-    """
-    Convert position (-1 to 1) to pulse width
-    """
-    min_pulse = calibration['min_pulse']
-    max_pulse = calibration['max_pulse']
-    center_pulse = calibration['center_pulse']
-    
-    if position < 0:
-        return center_pulse + ((center_pulse - min_pulse) * position)
-    else:
-        return center_pulse + ((max_pulse - center_pulse) * position)
-
-def synchronized_servo_move(target_position, current_position=0):
-    """
-    Move both servos in synchronized opposite directions.
-    target_position: -1.0 to 1.0 where 0 is center
-    current_position: starting position of servos
-    """
-    STEP_DELAY = 0.02  # 20ms delay between steps
-    STEP_SIZE = 0.05   # Move in 0.05 increments for smoothness
-    
-    # Calculate direction and steps
-    steps = abs(int((target_position - current_position) / STEP_SIZE))
-    step_dir = 1 if target_position > current_position else -1
-    
-    for i in range(steps):
-        pos = current_position + (step_dir * STEP_SIZE * i)
-        # Calculate pulse widths - note opposite signs for each servo
-        servo1_pulse = calculate_pulse_width(pos, SERVO1_CALIBRATION)
-        servo2_pulse = calculate_pulse_width(-pos, SERVO2_CALIBRATION)
+    if position < -1.0 or position > 1.0:
+        raise ValueError("Position must be between -1.0 and 1.0")
         
-        # Set both servos simultaneously
-        pi.set_servo_pulsewidth(SERVO1_PIN, servo1_pulse)
-        pi.set_servo_pulsewidth(SERVO2_PIN, servo2_pulse)
-        time.sleep(STEP_DELAY)
+    if position <= 0:
+        return int(calibration['CENTER'] + position * (calibration['CENTER'] - calibration['MIN']))
+    else:
+        return int(calibration['CENTER'] + position * (calibration['MAX'] - calibration['CENTER']))
+
+def smooth_move_servo(pin, start_position, target_position, calibration, steps=50, delay=0.02):
+    """
+    Move a servo smoothly from start_position to target_position.
+    - `start_position` and `target_position` are normalized values (-1.0 to 1.0).
+    - `calibration` is the calibration dictionary for the servo.
+    - `steps` determines the granularity of the movement.
+    - `delay` is the time between each step.
+    """
+    start_pulse = calculate_pulse_width(start_position, calibration)
+    target_pulse = calculate_pulse_width(target_position, calibration)
+    step_size = (target_pulse - start_pulse) / steps
+
+    for step in range(steps + 1):
+        pulse = start_pulse + step * step_size
+        pi.set_servo_pulsewidth(pin, int(pulse))
+        sleep(delay)
+
+def control_rotational_servos():
+    """
+    Interactive control for the rotational servos.
+    """
+    current_position1 = 0.0  # Start at center position
+    current_position2 = 0.0  # Start at center position
+
+    while True:
+        print(f"\nCurrent Positions: Servo1: {current_position1:.2f}, Servo2: {current_position2:.2f}")
+        input_position = input("Enter target position (-1.0 to 1.0) for Servo1 (or 'q' to quit): ")
+
+        if input_position.lower() == 'q':
+            print("Exiting control mode.")
+            break
+
+        try:
+            target_position1 = float(input_position)
+            if not -1.0 <= target_position1 <= 1.0:
+                raise ValueError("Position out of range.")
+        except ValueError as e:
+            print(f"Invalid input: {e}")
+            continue
+
+        # Opposite position for Servo2
+        target_position2 = -target_position1
+        print(f"Moving Servo1 to {target_position1:.2f} and Servo2 to {target_position2:.2f}...")
+
+        thread1 = Thread(target=smooth_move_servo, args=(SERVO1_PIN, current_position1, target_position1, SERVO1_CALIBRATION))
+        thread2 = Thread(target=smooth_move_servo, args=(SERVO2_PIN, current_position2, target_position2, SERVO2_CALIBRATION))
+
+        thread1.start()
+        thread2.start()
+
+        thread1.join()
+        thread2.join()
+
+        # Update current positions
+        current_position1 = target_position1
+        current_position2 = target_position2
+
+        print("Movement complete.")
+
+def reset_servos():
+    """
+    Reset both servos to the center (neutral) position.
+    """
+    print("Resetting servos to center position...")
+    smooth_move_servo(SERVO1_PIN, -1, -1, SERVO1_CALIBRATION)
+    smooth_move_servo(SERVO2_PIN, 1, 1, SERVO2_CALIBRATION)
+    print("Servos reset.")
     
-    # Final position
-    servo1_pulse = calculate_pulse_width(target_position, SERVO1_CALIBRATION)
-    servo2_pulse = calculate_pulse_width(-target_position, SERVO2_CALIBRATION)
-    pi.set_servo_pulsewidth(SERVO1_PIN, servo1_pulse)
-    pi.set_servo_pulsewidth(SERVO2_PIN, servo2_pulse)
-
-# Global variables for tracking servo positions
-current_position = 0.0
-
-# Reset both servos to center
-print("Resetting servos to center position...")
-synchronized_servo_move(0)
-print("Servos reset.")
+    
+    
+servo1_pulse = calculate_pulse_width(-1.0, SERVO1_CALIBRATION)
+servo2_pulse = calculate_pulse_width(-1.0, SERVO2_CALIBRATION)
 
 # Set servos to starting position
-synchronized_servo_move(-1.0)
-current_position = -1.0
+pi.set_servo_pulsewidth(SERVO1_PIN, servo1_pulse)
+pi.set_servo_pulsewidth(SERVO2_PIN, servo2_pulse)
 
 # Main program loop
 run = True
-
 while run:
     print("\n----------------------------------------------")
     print("-----------------TEST MODULE------------------")
     print("----------------------------------------------")
-    print(f"Current Position: {current_position:.2f}")
-    print("\nOptions:")
-    print("1. Tilt Forward (+0.2) (f)")
-    print("2. Tilt Backward (-0.2) (b)")
-    print("3. Reset to Center (c)")
-    print("4. Full Pour Position (p)")
-    print("5. Return to Start (s)")
-    print("6. Exit (q)")
-    
-    choice = input("Enter choice: ").lower()
-    
-    if choice in ['f', '1']:
-        target = min(current_position + 0.2, 1.0)
-        synchronized_servo_move(target, current_position)
-        current_position = target
-        
-    elif choice in ['b', '2']:
-        target = max(current_position - 0.2, -1.0)
-        synchronized_servo_move(target, current_position)
-        current_position = target
-        
-    elif choice in ['c', '3']:
-        synchronized_servo_move(0, current_position)
-        current_position = 0
-        print("Servos centered")
-        
-    elif choice in ['p', '4']:
-        synchronized_servo_move(1.0, current_position)
-        current_position = 1.0
-        print("Moving to pour position")
-        
-    elif choice in ['s', '5']:
-        synchronized_servo_move(-1.0, current_position)
-        current_position = -1.0
-        print("Moving to start position")
-        
-    elif choice in ['q', '6']:
-        synchronized_servo_move(0, current_position)  # Return to center before exit
-        print("Exiting...")
-        cleanup(None, None)
-        run = False
+    print("Options")
+    print("1. Control Rotational Servos (r)")
+    print("2. Reset Servos (reset)")
+    print("3. Exit (q)")
+
+    test = input("Which test do you want to run? ")
+
+    match test:
+        case "r":
+            control_rotational_servos()
+        case "reset":
+            reset_servos()
+        case "q":
+            run = False
+            reset_servos()
+            pi.stop()
+        case _:
+            print("Invalid option. Please try again.")
