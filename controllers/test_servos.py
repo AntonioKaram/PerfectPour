@@ -87,8 +87,8 @@ def reset_servos():
     Reset both servos to the center (neutral) position.
     """
     print("Resetting servos to center position...")
-    smooth_move_servo(SERVO1_PIN, 0.0, 0.0, SERVO1_CALIBRATION)
-    smooth_move_servo(SERVO2_PIN, 0.0, 0.0, SERVO2_CALIBRATION)
+    smooth_move_servo(SERVO1_PIN, -1, -1, SERVO1_CALIBRATION)
+    smooth_move_servo(SERVO2_PIN, -1, -1, SERVO2_CALIBRATION)
     print("Servos reset.")
 
 # Main program loop
