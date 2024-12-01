@@ -57,7 +57,7 @@ def control_rotational_servos():
     Interactive control for the rotational servos.
     """
     current_position1 = -1.0 # Start at center position
-    current_position2 = -1.0 # Start at center position
+    current_position2 = 1.0 # Start at center position
 
     while True:
         print(f"\nCurrent Positions: Servo1: {current_position1:.2f}, Servo2: {current_position2:.2f}")
@@ -118,7 +118,6 @@ while run:
 
     match test:
         case "r":
-            
             control_rotational_servos()
         case "reset":
             reset_servos()
