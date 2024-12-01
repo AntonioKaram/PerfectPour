@@ -12,29 +12,32 @@ if not pi.connected:
 SERVO1_PIN = 12
 SERVO2_PIN = 13
 
-# Servo pulse width range (microseconds)
-MIN_PULSE_WIDTH = 800   # Corresponds to -90 degrees
-MAX_PULSE_WIDTH = 2300  # Corresponds to +90 degrees
-CENTER_PULSE_WIDTH = 1190  # Neutral (0 degrees)
+# Individual servo calibration
+SERVO1_CALIBRATION = {
+    'MIN': 0,
+    'MAX': 2300,
+    'CENTER': 1190
+}
+
+SERVO2_CALIBRATION = {
+    'MIN': 800,
+    'MAX': 2300,
+    'CENTER': 1190
+}
 
 # Servo initialization
-pi.set_servo_pulsewidth(SERVO1_PIN, CENTER_PULSE_WIDTH)
-pi.set_servo_pulsewidth(SERVO2_PIN, CENTER_PULSE_WIDTH)
+pi.set_servo_pulsewidth(SERVO1_PIN, SERVO1_CALIBRATION['CENTER'])
+pi.set_servo_pulsewidth(SERVO2_PIN, SERVO2_CALIBRATION['CENTER'])
 
-def calculate_pulse_width(position):
-    """
-    Convert a normalized servo position (-1.0 to 1.0) to pulse width.
-    Full 180-degree range: -1.0 = -90°(800μs), 0 = 0°(1190μs), 1.0 = +90°(2300μs)
-    """
+# Then modify calculate_pulse_width to accept calibration values
+def calculate_pulse_width(position, calibration):
     if position < -1.0 or position > 1.0:
         raise ValueError("Position must be between -1.0 and 1.0")
         
     if position <= 0:
-        # Map -1.0 -> 0.0 to MIN_PULSE_WIDTH -> CENTER_PULSE_WIDTH
-        return int(CENTER_PULSE_WIDTH + position * (CENTER_PULSE_WIDTH - MIN_PULSE_WIDTH))
+        return int(calibration['CENTER'] + position * (calibration['CENTER'] - calibration['MIN']))
     else:
-        # Map 0.0 -> 1.0 to CENTER_PULSE_WIDTH -> MAX_PULSE_WIDTH
-        return int(CENTER_PULSE_WIDTH + position * (MAX_PULSE_WIDTH - CENTER_PULSE_WIDTH))
+        return int(calibration['CENTER'] + position * (calibration['MAX'] - calibration['CENTER']))
 
 def smooth_move_servo(pin, start_position, target_position, steps=50, delay=0.02):
     """
