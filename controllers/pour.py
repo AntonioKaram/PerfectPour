@@ -104,7 +104,7 @@ def pour():
     sleep(MAX_BOTTOM*0.15)
     print("Pouring...")
     # thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.5, 0.1))
-    thread2 = Thread(target=rotate_servo, args=(servo2, 0, 0.15, 0.1))
+    thread2 = Thread(target=rotate_servo, args=(servo2, 0, 1, 0.1))
     
     # Start both threads
     # thread1.start()
@@ -143,36 +143,36 @@ def main():
     print("\n\n---------------------------------------------------------------")
     print("Starting Setup")
     print("Aligning Cup...")
-    # thread1 = Thread(target=reset_servo, args=(servo1))
-    thread2 = Thread(target=reset_servo, args=(servo2))
+    # # thread1 = Thread(target=reset_servo, args=(servo1))
+    # thread2 = Thread(target=reset_servo, args=(servo2))
     
-    # Start both threads
-    # thread1.start()
-    thread2.start()
+    # # Start both threads
+    # # thread1.start()
+    # thread2.start()
     
-    # Wait for both threads to finish
-    # thread1.join()
-    thread2.join()
+    # # Wait for both threads to finish
+    # # thread1.join()
+    # thread2.join()
     
     print("Setup complted...")
     print("---------------------------------------------------------------\n\n")
     
-    ## Phase 1 - Pierce can and set up cup
-    print("---------------------------------------------------------------")
-    print("Starting Phase 1")
-    thread1 = Thread(target=pierce_can)
-    thread2 = Thread(target=setup_cup)
+    # ## Phase 1 - Pierce can and set up cup
+    # print("---------------------------------------------------------------")
+    # print("Starting Phase 1")
+    # thread1 = Thread(target=pierce_can)
+    # thread2 = Thread(target=setup_cup)
     
-    # Start both threads
-    thread1.start()
-    thread2.start()
+    # # Start both threads
+    # thread1.start()
+    # thread2.start()
     
-    # Wait for both threads to finish
-    thread1.join()
-    thread2.join()
+    # # Wait for both threads to finish
+    # thread1.join()
+    # thread2.join()
     
-    print("Phase 1 complted...")
-    print("---------------------------------------------------------------\n\n")
+    # print("Phase 1 complted...")
+    # print("---------------------------------------------------------------\n\n")
     
     
     ## Phase 2 - Pour can and tilt cup
