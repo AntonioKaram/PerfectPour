@@ -88,15 +88,15 @@ def pierce_can():
     
 def setup_cup():
     print("Moving cup to initial position...")
-    GPIO_move(bottom_low, bottom_high, MAX_BOTTOM)
+    GPIO_move(bottom_low, bottom_high, MAX_BOTTOM*0.85)
     
     print("Done moving cup...")
     sleep(1)
     
 def tilt_cup():
-    GPIO_move(bottom_high, bottom_low, MAX_BOTTOM * 0.2)
+    GPIO_move(bottom_high, bottom_low, MAX_BOTTOM * 0.05)
     
-    sleep(3)
+    sleep(1)
     GPIO_move(bottom_high, bottom_low, MAX_BOTTOM * 0.8)
     sleep(1)
     
