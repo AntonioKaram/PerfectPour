@@ -35,7 +35,7 @@ def calculate_pulse_width(position, calibration):
     else:
         return int(calibration['CENTER'] + position * (calibration['MAX'] - calibration['CENTER']))
 
-def smooth_move_servo(pin, start_position, target_position, calibration, steps=50, delay=0.02):
+def smooth_move_servo(pin, start_position, target_position, calibration, steps=50, delay=0.001):
     """
     Move a servo smoothly from start_position to target_position.
     - `start_position` and `target_position` are normalized values (-1.0 to 1.0).
