@@ -225,10 +225,12 @@ def main():
     print("---------------------------------------------------------------\n\n")
     
     
-    servo2 = Servo(13, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
-    servo2.value = -1
+    smooth_move_servo(13, -1, 1,{
+    'MIN': 800,
+    'MAX': 2300,
+    'CENTER': 1190})
     
-    GPIO.cleanup()
+    # GPIO.cleanup()
   
 try:
     main()
