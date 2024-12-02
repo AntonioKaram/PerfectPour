@@ -134,7 +134,6 @@ def tilt_cup():
     sleep(1)
     
 def pour():
-    sleep(MAX_BOTTOM*0.15)
     print("Pouring...")
     # thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.5, 0.1))
     smooth_move_servo(13, 1, 1,{
