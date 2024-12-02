@@ -4,6 +4,13 @@ from gpiozero import Servo
 from threading import Thread
 import RPi.GPIO as GPIO # type: ignore
 from gpiozero.pins.pigpio import PiGPIOFactory
+import pigpio
+
+# Initialize pigpio
+pi = pigpio.pi()
+
+if not pi.connected:
+    raise RuntimeError("Failed to connect to pigpio daemon. Ensure `pigpiod` is running.")
 
 # Initialize GPIO
 GPIO.setwarnings(False)
@@ -39,6 +46,32 @@ GPIO.output(bottom_low, GPIO.LOW)
 GPIO.output(bottom_high, GPIO.LOW)
 GPIO.output(top_low, GPIO.LOW)
 GPIO.output(top_high, GPIO.LOW)
+
+def calculate_pulse_width(position, calibration):
+    if position < -1.0 or position > 1.0:
+        raise ValueError("Position must be between -1.0 and 1.0")
+        
+    if position <= 0:
+        return int(calibration['CENTER'] + position * (calibration['CENTER'] - calibration['MIN']))
+    else:
+        return int(calibration['CENTER'] + position * (calibration['MAX'] - calibration['CENTER']))
+    
+def smooth_move_servo(pin, start_position, target_position, calibration, steps=50, delay=0.001):
+    """
+    Move a servo smoothly from start_position to target_position.
+    - `start_position` and `target_position` are normalized values (-1.0 to 1.0).
+    - `calibration` is the calibration dictionary for the servo.
+    - `steps` determines the granularity of the movement.
+    - `delay` is the time between each step.
+    """
+    start_pulse = calculate_pulse_width(start_position, calibration)
+    target_pulse = calculate_pulse_width(target_position, calibration)
+    step_size = (target_pulse - start_pulse) / steps
+
+    for step in range(steps + 1):
+        pulse = start_pulse + step * step_size
+        pi.set_servo_pulsewidth(pin, int(pulse))
+        sleep(delay)
 
 def GPIO_move(in0, in1, duration):
     GPIO.output(in0, GPIO.LOW)
@@ -104,7 +137,7 @@ def pour():
     sleep(MAX_BOTTOM*0.15)
     print("Pouring...")
     # thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.5, 0.1))
-    rotate_servo(servo2, 0, 1, 0.1)
+    smooth_move_servo(13, 0, 1, {'MIN': 500, 'MAX': 2500, 'CENTER': 1500})
     
     # Start both threads
     # thread1.start()
