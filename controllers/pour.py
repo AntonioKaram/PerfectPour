@@ -143,6 +143,8 @@ def main():
     # # thread1.join()
     # thread2.join()
     
+    setup_cup()
+    
     print("Setup complted...")
     print("---------------------------------------------------------------\n\n")
     
