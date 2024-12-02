@@ -136,10 +136,7 @@ def tilt_cup():
 def pour():
     print("Pouring...")
     # thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.5, 0.1))
-    smooth_move_servo(13, 1, 1,{
-    'MIN': 800,
-    'MAX': 2300,
-    'CENTER': 1190})
+    
     
     smooth_move_servo(13, 1, -1,{
     'MIN': 800,
@@ -182,6 +179,10 @@ def main():
     # # Wait for both threads to finish
     # # thread1.join()
     # thread2.join()
+    smooth_move_servo(13, 1, 1,{
+    'MIN': 800,
+    'MAX': 2300,
+    'CENTER': 1190})
     
     setup_cup()
     
