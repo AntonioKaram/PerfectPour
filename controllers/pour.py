@@ -184,6 +184,8 @@ def main():
     'MAX': 2300,
     'CENTER': 1190})
     
+    sleep(5)
+    
     setup_cup()
     
     print("Setup complted...")
@@ -230,7 +232,8 @@ def main():
     'MAX': 2300,
     'CENTER': 1190})
     
-    # GPIO.cleanup()
+    GPIO.cleanup()
+
   
 try:
     main()
