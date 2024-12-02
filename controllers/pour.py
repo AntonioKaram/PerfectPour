@@ -137,7 +137,7 @@ def pour():
     sleep(MAX_BOTTOM*0.15)
     print("Pouring...")
     # thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.5, 0.1))
-    smooth_move_servo(13, 0, 1, {'MIN': 500, 'MAX': 2500, 'CENTER': 1500})
+    smooth_move_servo(13, 1, -1, {'MIN': 500, 'MAX': 2500, 'CENTER': 1500})
     
     # Start both threads
     # thread1.start()
@@ -216,7 +216,8 @@ def main():
     print("Phase 2 complted...")
     print("---------------------------------------------------------------\n\n")
     
-    smooth_move_servo(13, 1, 0, {'MIN': 500, 'MAX': 2500, 'CENTER': 1500})
+    
+    smooth_move_servo(13, -1, 1, {'MIN': 500, 'MAX': 2500, 'CENTER': 1500})
     
     GPIO.cleanup()
   
