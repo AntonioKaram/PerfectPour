@@ -226,6 +226,7 @@ def main():
     
     
     servo2 = Servo(13, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
+    servo2.value = -1
     
     GPIO.cleanup()
   
