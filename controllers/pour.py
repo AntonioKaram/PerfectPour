@@ -216,6 +216,8 @@ def main():
     print("Phase 2 complted...")
     print("---------------------------------------------------------------\n\n")
     
+    smooth_move_servo(13, 1, 0, {'MIN': 500, 'MAX': 2500, 'CENTER': 1500})
+    
     GPIO.cleanup()
   
 try:
