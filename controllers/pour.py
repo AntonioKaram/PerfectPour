@@ -34,7 +34,7 @@ top_high = 27
 
 # Set up rotating servos
 #servo1 = Servo(12, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
-# servo2 = Servo(13, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width
+# 
 
 # Set up linear servos
 GPIO.setup(bottom_low, GPIO.OUT)
@@ -225,10 +225,7 @@ def main():
     print("---------------------------------------------------------------\n\n")
     
     
-    smooth_move_servo(13, -1, 1,{
-    'MIN': 800,
-    'MAX': 2300,
-    'CENTER': 1190})
+    servo2 = Servo(13, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
     
     GPIO.cleanup()
   
