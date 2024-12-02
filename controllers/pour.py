@@ -129,7 +129,7 @@ def setup_cup():
 def tilt_cup():
     GPIO_move(bottom_high, bottom_low, MAX_BOTTOM * 0.05)
     
-    sleep(1)
+    sleep(2)
     GPIO_move(bottom_high, bottom_low, MAX_BOTTOM * 0.65)
     sleep(1)
     
@@ -137,12 +137,12 @@ def pour():
     sleep(MAX_BOTTOM*0.15)
     print("Pouring...")
     # thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.5, 0.1))
-    smooth_move_servo(13, -1, -1,{
+    smooth_move_servo(13, 1, 1,{
     'MIN': 800,
     'MAX': 2300,
     'CENTER': 1190})
     
-    smooth_move_servo(13, -1, 1,{
+    smooth_move_servo(13, 1, -1,{
     'MIN': 800,
     'MAX': 2300,
     'CENTER': 1190})
@@ -225,7 +225,7 @@ def main():
     print("---------------------------------------------------------------\n\n")
     
     
-    smooth_move_servo(13, 1, -1,{
+    smooth_move_servo(13, -1, 1,{
     'MIN': 800,
     'MAX': 2300,
     'CENTER': 1190})
