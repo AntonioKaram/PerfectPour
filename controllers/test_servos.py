@@ -19,8 +19,8 @@ SERVO2_PIN = 13
 backgate_low = 3
 backgate_high = 14
 
-frontgate_low = 2
-frontgate_high = 4
+frontgate_low = 4
+frontgate_high = 2
 
 GPIO.setup(backgate_low, GPIO.OUT)
 GPIO.setup(backgate_high, GPIO.OUT)
@@ -142,7 +142,7 @@ try:
 
         if choice == 'r':
             # control_rotational_servos()
-            GPIO_move(frontgate_low, frontgate_high, 2)
+            GPIO_move(frontgate_low, frontgate_high, 4)
         elif choice == 'reset':
             reset_servos()
         elif choice == 'q':
