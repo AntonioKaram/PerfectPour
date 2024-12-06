@@ -32,9 +32,11 @@ bottom_high = 23
 top_low = 17
 top_high = 27
 
-# Set up rotating servos
-#servo1 = Servo(12, pin_factory=factory, min_pulse_width=min_pulse_width, max_pulse_width=max_pulse_width)
-# 
+backgate_low = 2
+backgate_high = 3
+
+frontgate_low = 4
+frontgate_high = 14
 
 # Set up linear servos
 GPIO.setup(bottom_low, GPIO.OUT)
@@ -46,6 +48,11 @@ GPIO.output(bottom_low, GPIO.LOW)
 GPIO.output(bottom_high, GPIO.LOW)
 GPIO.output(top_low, GPIO.LOW)
 GPIO.output(top_high, GPIO.LOW)
+
+GPIO.output(backgate_low, GPIO.LOW)
+GPIO.output(backgate_high, GPIO.LOW)
+GPIO.output(frontgate_low, GPIO.LOW)
+GPIO.output(frontgate_high, GPIO.LOW)
 
 # GPIO Pins for the servos
 SERVO1_PIN = 12

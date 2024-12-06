@@ -1,6 +1,7 @@
 from time import sleep
 from threading import Thread
 import pigpio
+import RPi.GPIO as GPIO # type: ignore
 
 # Initialize pigpio
 pi = pigpio.pi()
@@ -12,12 +13,36 @@ if not pi.connected:
 SERVO1_PIN = 12
 SERVO2_PIN = 13
 
+backgate_low = 2
+backgate_high = 3
+
+frontgate_low = 4
+frontgate_high = 14
+
+GPIO.output(backgate_low, GPIO.LOW)
+GPIO.output(backgate_high, GPIO.LOW)
+GPIO.output(frontgate_low, GPIO.LOW)
+GPIO.output(frontgate_high, GPIO.LOW)
+
 # Calibration values from datasheet
 SERVO_CALIBRATION = {
     'MIN': 500,    # Minimum pulse width in microseconds
     'MAX': 2500,   # Maximum pulse width in microseconds
     'CENTER': 1500 # Neutral (center) pulse width in microseconds
 }
+
+def GPIO_move(in0, in1, duration):
+    GPIO.output(in0, GPIO.LOW)
+    GPIO.output(in1, GPIO.HIGH)
+    
+    sleep(duration)
+    
+    GPIO.output(in0, GPIO.LOW)
+    GPIO.output(in1, GPIO.LOW)
+    
+def GPIO_stop(in0, in1):
+    GPIO.output(in0, GPIO.LOW)
+    GPIO.output(in1, GPIO.LOW)
 
 def calculate_pulse_width(position, calibration):
     """
@@ -108,7 +133,8 @@ try:
         choice = input("Enter your choice: ").strip().lower()
 
         if choice == 'r':
-            control_rotational_servos()
+            # control_rotational_servos()
+            GPIO_move(backgate_high, backgate_low, 2)
         elif choice == 'reset':
             reset_servos()
         elif choice == 'q':
