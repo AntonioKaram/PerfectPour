@@ -125,7 +125,7 @@ def tilt_cup():
 def pour():
     print("Pouring...")
     
-    smooth_move_servo(SERVO1_PIN, -0.3, -1, SERVO_CALIBRATION)
+    smooth_move_servo(SERVO2_PIN, 0.3, 1, SERVO_CALIBRATION)
     
     
 def main():
@@ -133,8 +133,8 @@ def main():
     print("Starting Setup")
     print("Aligning Cup...")
 
-    smooth_move_servo(SERVO1_PIN, -1, -1, SERVO_CALIBRATION)
-    smooth_move_servo(SERVO1_PIN, -1, -0.3, SERVO_CALIBRATION)
+    smooth_move_servo(SERVO2_PIN, 1, 1, SERVO_CALIBRATION)
+    smooth_move_servo(SERVO2_PIN, 1, 0.3, SERVO_CALIBRATION)
 
     setup_cup()
     
@@ -177,6 +177,9 @@ def main():
     print("---------------------------------------------------------------\n\n")
         
     GPIO.cleanup()
+    pi.set_servo_pulsewidth(SERVO1_PIN, 0)
+    pi.set_servo_pulsewidth(SERVO2_PIN, 0)
+    pi.stop()
 
   
 try:
