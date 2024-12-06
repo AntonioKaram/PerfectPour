@@ -125,7 +125,7 @@ def tilt_cup():
 def pour():
     print("Pouring...")
     
-    smooth_move_servo(SERVO1_PIN, -0.3, -1, SERVO_CALIBRATION, steps=200, delay=0.04)
+    smooth_move_servo(SERVO1_PIN, -0.3, -1, SERVO_CALIBRATION, steps=100, delay=0.02)
     
     
 def main():
