@@ -12,36 +12,30 @@ if not pi.connected:
 SERVO1_PIN = 12
 SERVO2_PIN = 13
 
-# Individual servo calibration
-SERVO1_CALIBRATION = {
-    'MIN': 800,
-    'MAX': 2300,
-    'CENTER': 1190
+# Calibration values from datasheet
+SERVO_CALIBRATION = {
+    'MIN': 500,    # Minimum pulse width in microseconds
+    'MAX': 2500,   # Maximum pulse width in microseconds
+    'CENTER': 1500 # Neutral (center) pulse width in microseconds
 }
 
-SERVO2_CALIBRATION = {
-    'MIN': 800,
-    'MAX': 2300,
-    'CENTER': 1190
-}
-
-# Then modify calculate_pulse_width to accept calibration values
 def calculate_pulse_width(position, calibration):
+    """
+    Calculate the pulse width for the given normalized position.
+    - `position`: Normalized value (-1.0 to 1.0) for servo angle.
+    """
     if position < -1.0 or position > 1.0:
         raise ValueError("Position must be between -1.0 and 1.0")
-        
+    
     if position <= 0:
         return int(calibration['CENTER'] + position * (calibration['CENTER'] - calibration['MIN']))
     else:
         return int(calibration['CENTER'] + position * (calibration['MAX'] - calibration['CENTER']))
 
-def smooth_move_servo(pin, start_position, target_position, calibration, steps=50, delay=0.001):
+def smooth_move_servo(pin, start_position, target_position, calibration, steps=50, delay=0.01):
     """
-    Move a servo smoothly from start_position to target_position.
-    - `start_position` and `target_position` are normalized values (-1.0 to 1.0).
-    - `calibration` is the calibration dictionary for the servo.
-    - `steps` determines the granularity of the movement.
-    - `delay` is the time between each step.
+    Smoothly move a servo from start_position to target_position.
+    - `start_position` and `target_position` are normalized (-1.0 to 1.0).
     """
     start_pulse = calculate_pulse_width(start_position, calibration)
     target_pulse = calculate_pulse_width(target_position, calibration)
@@ -52,12 +46,21 @@ def smooth_move_servo(pin, start_position, target_position, calibration, steps=5
         pi.set_servo_pulsewidth(pin, int(pulse))
         sleep(delay)
 
+def reset_servos():
+    """
+    Reset servos to the center position (neutral).
+    """
+    print("Resetting servos to center position...")
+    smooth_move_servo(SERVO1_PIN, -1, 0, SERVO_CALIBRATION)
+    smooth_move_servo(SERVO2_PIN, 1, 0, SERVO_CALIBRATION)
+    print("Servos reset.")
+
 def control_rotational_servos():
     """
-    Interactive control for the rotational servos.
+    Interactive control for rotational servos.
     """
-    current_position1 = -1.0 # Start at center position
-    current_position2 = 1.0 # Start at center position
+    current_position1 = 0.0 # Start at center
+    current_position2 = 0.0 # Start at center
 
     while True:
         print(f"\nCurrent Positions: Servo1: {current_position1:.2f}, Servo2: {current_position2:.2f}")
@@ -79,8 +82,8 @@ def control_rotational_servos():
         target_position2 = -target_position1
         print(f"Moving Servo1 to {target_position1:.2f} and Servo2 to {target_position2:.2f}...")
 
-        thread1 = Thread(target=smooth_move_servo, args=(SERVO1_PIN, current_position1, target_position1, SERVO1_CALIBRATION))
-        thread2 = Thread(target=smooth_move_servo, args=(SERVO2_PIN, current_position2, target_position2, SERVO2_CALIBRATION))
+        thread1 = Thread(target=smooth_move_servo, args=(SERVO1_PIN, current_position1, target_position1, SERVO_CALIBRATION))
+        thread2 = Thread(target=smooth_move_servo, args=(SERVO2_PIN, current_position2, target_position2, SERVO_CALIBRATION))
 
         thread1.start()
         thread2.start()
@@ -94,35 +97,26 @@ def control_rotational_servos():
 
         print("Movement complete.")
 
-def reset_servos():
-    """
-    Reset both servos to the center (neutral) position.
-    """
-    print("Resetting servos to center position...")
-    smooth_move_servo(SERVO1_PIN, -1, -1, SERVO1_CALIBRATION)
-    smooth_move_servo(SERVO2_PIN, 1, 1, SERVO2_CALIBRATION)
-    print("Servos reset.")
-    
-# Main program loop
-run = True
-while run:
-    print("\n----------------------------------------------")
-    print("-----------------TEST MODULE------------------")
-    print("----------------------------------------------")
-    print("Options")
-    print("1. Control Rotational Servos (r)")
-    print("2. Reset Servos (reset)")
-    print("3. Exit (q)")
+# Main Program Loop
+try:
+    while True:
+        print("\nOptions:")
+        print("1. Control Rotational Servos (r)")
+        print("2. Reset Servos (reset)")
+        print("3. Exit (q)")
 
-    test = input("Which test do you want to run? ")
+        choice = input("Enter your choice: ").strip().lower()
 
-    match test:
-        case "r":
+        if choice == 'r':
             control_rotational_servos()
-        case "reset":
+        elif choice == 'reset':
             reset_servos()
-        case "q":
-            run = False
-            pi.stop()
-        case _:
+        elif choice == 'q':
+            print("Exiting program.")
+            break
+        else:
             print("Invalid option. Please try again.")
+finally:
+    pi.set_servo_pulsewidth(SERVO1_PIN, 0)
+    pi.set_servo_pulsewidth(SERVO2_PIN, 0)
+    pi.stop()

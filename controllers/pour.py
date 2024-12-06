@@ -179,12 +179,10 @@ def main():
     # # Wait for both threads to finish
     # # thread1.join()
     # thread2.join()
-    # Set the servo to position 1 and keep it there
-    target_pulse = calculate_pulse_width(1, {
-        'MIN': 800,
-        'MAX': 2300,
-        'CENTER': 1190})
-    pi.set_servo_pulsewidth(13, target_pulse)
+    smooth_move_servo(13, 1, 1,{
+    'MIN': 800,
+    'MAX': 2300,
+    'CENTER': 1190})
     
     sleep(5)
     
