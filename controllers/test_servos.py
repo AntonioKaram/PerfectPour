@@ -6,6 +6,9 @@ import RPi.GPIO as GPIO # type: ignore
 # Initialize pigpio
 pi = pigpio.pi()
 
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+
 if not pi.connected:
     raise RuntimeError("Failed to connect to pigpio daemon. Ensure `pigpiod` is running.")
 
