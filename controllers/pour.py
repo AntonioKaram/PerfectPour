@@ -47,22 +47,34 @@ GPIO.output(bottom_high, GPIO.LOW)
 GPIO.output(top_low, GPIO.LOW)
 GPIO.output(top_high, GPIO.LOW)
 
+# GPIO Pins for the servos
+SERVO1_PIN = 12
+SERVO2_PIN = 13
+
+# Calibration values from datasheet
+SERVO_CALIBRATION = {
+    'MIN': 500,    # Minimum pulse width in microseconds
+    'MAX': 2500,   # Maximum pulse width in microseconds
+    'CENTER': 1500 # Neutral (center) pulse width in microseconds
+}
+
 def calculate_pulse_width(position, calibration):
+    """
+    Calculate the pulse width for the given normalized position.
+    - `position`: Normalized value (-1.0 to 1.0) for servo angle.
+    """
     if position < -1.0 or position > 1.0:
         raise ValueError("Position must be between -1.0 and 1.0")
-        
+    
     if position <= 0:
         return int(calibration['CENTER'] + position * (calibration['CENTER'] - calibration['MIN']))
     else:
         return int(calibration['CENTER'] + position * (calibration['MAX'] - calibration['CENTER']))
-    
-def smooth_move_servo(pin, start_position, target_position, calibration, steps=50, delay=0.02):
+
+def smooth_move_servo(pin, start_position, target_position, calibration, steps=50, delay=0.01):
     """
-    Move a servo smoothly from start_position to target_position.
-    - `start_position` and `target_position` are normalized values (-1.0 to 1.0).
-    - `calibration` is the calibration dictionary for the servo.
-    - `steps` determines the granularity of the movement.
-    - `delay` is the time between each step.
+    Smoothly move a servo from start_position to target_position.
+    - `start_position` and `target_position` are normalized (-1.0 to 1.0).
     """
     start_pulse = calculate_pulse_width(start_position, calibration)
     target_pulse = calculate_pulse_width(target_position, calibration)
@@ -86,29 +98,6 @@ def GPIO_stop(in0, in1):
     GPIO.output(in0, GPIO.LOW)
     GPIO.output(in1, GPIO.LOW)
 
-def rotate_servo_smooth(servo, start_position, end_position, step):
-    for i in range(start_position, end_position):
-        servo.value = sin(radians(i))
-        sleep(step)
-        
-def rotate_servo(servo, start_position, end_position, duration):
-    steps = 500
-    step_delay = duration / steps
-    step_size = (end_position - start_position) / steps
-    
-    for i in range(steps + 1):
-        position = start_position + i * step_size
-        if position < 0:
-            servo.min()
-        elif position > 1:
-            servo.max()
-        else:
-            servo.value = position
-        sleep(step_delay)
-        
-def reset_servo(servo, start=True):
-    servo.value = 0 if start else 1
-  
 def pierce_can():
     print("Piercing the can...")
     GPIO_move(top_low, top_high, MAX_TOP)
@@ -135,57 +124,18 @@ def tilt_cup():
     
 def pour():
     print("Pouring...")
-    # thread1 = Thread(target=rotate_servo, args=(servo1, 0, 0.5, 0.1))
     
+    smooth_move_servo(SERVO1_PIN, -0.3, -1, SERVO_CALIBRATION)
     
-    smooth_move_servo(13, 1, -1,{
-    'MIN': 800,
-    'MAX': 2300,
-    'CENTER': 1190})
-    
-    # Start both threads
-    # thread1.start()
-    
-    # Wait for both threads to finish
-    # thread1.join()
-    
-    # thread1 = Thread(target=rotate_servo, args=(servo1, 0.5, 1, 1))
-    
-    # Start both threads
-    # thread1.start()
-    
-    # Wait for both threads to finish
-    # thread1.join()
-    
-    
-    
-    # Start both threads
-    # thread1.start()
-    
-    # Wait for both threads to finish
-    # thread1.join()
     
 def main():
     print("\n\n---------------------------------------------------------------")
     print("Starting Setup")
     print("Aligning Cup...")
-    # # thread1 = Thread(target=reset_servo, args=(servo1))
-    # thread2 = Thread(target=reset_servo, args=(servo2))
-    
-    # # Start both threads
-    # # thread1.start()
-    # thread2.start()
-    
-    # # Wait for both threads to finish
-    # # thread1.join()
-    # thread2.join()
-    smooth_move_servo(13, 1, 1,{
-    'MIN': 800,
-    'MAX': 2300,
-    'CENTER': 1190})
-    
-    sleep(5)
-    
+
+    smooth_move_servo(SERVO1_PIN, -1, -1, SERVO_CALIBRATION)
+    smooth_move_servo(SERVO1_PIN, -1, -0.3, SERVO_CALIBRATION)
+
     setup_cup()
     
     print("Setup complted...")
@@ -225,13 +175,7 @@ def main():
     
     print("Phase 2 complted...")
     print("---------------------------------------------------------------\n\n")
-    
-    
-    smooth_move_servo(13, -1, 1,{
-    'MIN': 800,
-    'MAX': 2300,
-    'CENTER': 1190})
-    
+        
     GPIO.cleanup()
 
   
