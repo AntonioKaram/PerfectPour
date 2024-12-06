@@ -22,6 +22,11 @@ backgate_high = 3
 frontgate_low = 4
 frontgate_high = 14
 
+GPIO.setup(backgate_low, GPIO.OUT)
+GPIO.setup(backgate_high, GPIO.OUT)
+GPIO.setup(frontgate_low, GPIO.OUT)
+GPIO.setup(frontgate_high, GPIO.OUT)
+
 GPIO.output(backgate_low, GPIO.LOW)
 GPIO.output(backgate_high, GPIO.LOW)
 GPIO.output(frontgate_low, GPIO.LOW)

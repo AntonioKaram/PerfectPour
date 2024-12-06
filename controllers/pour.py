@@ -44,6 +44,11 @@ GPIO.setup(bottom_high, GPIO.OUT)
 GPIO.setup(top_low, GPIO.OUT)
 GPIO.setup(top_high, GPIO.OUT)
 
+GPIO.setup(backgate_low, GPIO.OUT)
+GPIO.setup(backgate_high, GPIO.OUT)
+GPIO.setup(frontgate_low, GPIO.OUT)
+GPIO.setup(frontgate_high, GPIO.OUT)
+
 GPIO.output(bottom_low, GPIO.LOW)
 GPIO.output(bottom_high, GPIO.LOW)
 GPIO.output(top_low, GPIO.LOW)
