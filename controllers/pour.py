@@ -25,6 +25,8 @@ max_pulse_width = 0.0023  # 180 degrees
 MAX_BOTTOM = 27
 MAX_TOP = 15
 
+MAX_FRONT = 5
+
 # Set up linear servos
 bottom_low = 22
 bottom_high = 23
