@@ -23,9 +23,9 @@ min_pulse_width = 0.00008  # 0 degrees
 max_pulse_width = 0.0023  # 180 degrees
 
 MAX_BOTTOM = 27
-MAX_TOP = 15
-
+MAX_TOP = 5
 MAX_FRONT = 5
+MAX_BACK = 2.5
 
 # Set up linear servos
 bottom_low = 22
@@ -61,7 +61,6 @@ GPIO.output(frontgate_high, GPIO.LOW)
 
 # GPIO Pins for the servos
 SERVO1_PIN = 12
-SERVO2_PIN = 13
 
 # Calibration values from datasheet
 SERVO_CALIBRATION = {
@@ -139,7 +138,22 @@ def pour():
     
     smooth_move_servo(SERVO1_PIN, -0.3, -1, SERVO_CALIBRATION, steps=100, delay=0.02)
     
+def open_gate():
+    print("Opening gate...")
+    GPIO_move(backgate_high, backgate_low, MAX_BACK)
     
+    sleep(2)
+    
+    print("Closing gate...")
+    GPIO_move(backgate_low, backgate_high, MAX_BACK)
+    
+    sleep(1)    
+    
+def release_can():
+    print("Releasing the can...")
+    GPIO_move(frontgate_high, frontgate_low, MAX_FRONT)
+    
+
 def main():
     print("\n\n---------------------------------------------------------------")
     print("Starting Setup")
@@ -147,28 +161,30 @@ def main():
 
     smooth_move_servo(SERVO1_PIN, -1, -1, SERVO_CALIBRATION)
     smooth_move_servo(SERVO1_PIN, -1, -0.3, SERVO_CALIBRATION)
-
-    setup_cup()
     
+    thread1 = Thread(target=setup_cup)
+    thread2 = Thread(target=open_gate)
+    
+    # Start both threads
+    thread1.start()
+    thread2.start()
+    
+    # Wait for both threads to finish
+    thread1.join()
+    thread2.join()
+
     print("Setup complted...")
     print("---------------------------------------------------------------\n\n")
     
-    # ## Phase 1 - Pierce can and set up cup
-    # print("---------------------------------------------------------------")
-    # print("Starting Phase 1")
-    # thread1 = Thread(target=pierce_can)
-    # thread2 = Thread(target=setup_cup)
+    ## Phase 1 - Pierce can and set up cup
+    print("---------------------------------------------------------------")
+    print("Starting Phase 1")
+    pierce_can()
     
-    # # Start both threads
-    # thread1.start()
-    # thread2.start()
+    release_can()
     
-    # # Wait for both threads to finish
-    # thread1.join()
-    # thread2.join()
-    
-    # print("Phase 1 complted...")
-    # print("---------------------------------------------------------------\n\n")
+    print("Phase 1 complted...")
+    print("---------------------------------------------------------------\n\n")
     
     
     ## Phase 2 - Pour can and tilt cup
@@ -187,10 +203,19 @@ def main():
     
     print("Phase 2 complted...")
     print("---------------------------------------------------------------\n\n")
-        
+    
+    print("---------------------------------------------------------------")
+    print("Pouring completed...")
+    print("Resetting the system...")
+    GPIO_move(frontgate_high, frontgate_low, MAX_FRONT)
+    print("System reset...")
+    
+    GPIO.output(backgate_low, GPIO.LOW)
+    GPIO.output(backgate_high, GPIO.LOW) 
     GPIO.cleanup()
+    GPIO.output(backgate_low, GPIO.LOW)
+    GPIO.output(backgate_high, GPIO.LOW)
     pi.set_servo_pulsewidth(SERVO1_PIN, 0)
-    pi.set_servo_pulsewidth(SERVO2_PIN, 0)
     pi.stop()
 
   
