@@ -207,13 +207,14 @@ def main():
     print("---------------------------------------------------------------")
     print("Pouring completed...")
     print("Resetting the system...")
-    GPIO_move(frontgate_high, frontgate_low, MAX_FRONT)
+    GPIO_move(frontgate_low, frontgate_high, MAX_FRONT)
     print("System reset...")
     
     GPIO.output(backgate_low, GPIO.LOW)
-    GPIO.output(backgate_high, GPIO.LOW) 
-    GPIO.cleanup()
+    GPIO.output(backgate_high, GPIO.LOW)
     pi.set_servo_pulsewidth(SERVO1_PIN, 0)
+    pi.set_servo_pulsewidth(backgate_high, 0)
+    pi.set_servo_pulsewidth(backgate_low, 0)
     pi.stop()
 
   
