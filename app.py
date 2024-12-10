@@ -12,7 +12,7 @@ app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'default_secret_key')
 machine_in_use = False
 current_user_session = None
 user_active_time = None
-timeout_duration = 30
+timeout_duration = 90
 timeout_occurred = False  # Flag to indicate if a timeout has occurred
 
 # Function to release the machine lock after the timeout
