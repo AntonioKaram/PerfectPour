@@ -3,6 +3,7 @@ import os
 import time
 import threading
 import uuid
+import subprocess
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'default_secret_key')
@@ -106,4 +107,19 @@ def status():
     })
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=9000)
+    # Start ngrok with your reserved domain
+    ngrok_process = subprocess.Popen(
+        ['ngrok', 'http', '--url=devoted-workable-platypus.ngrok-free.app', '9000'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+
+    try:
+        print("Starting Flask app...")
+        app.run(host='0.0.0.0', port=9000)
+    except KeyboardInterrupt:
+        print("\nShutting down Flask and ngrok...")
+    finally:
+        # Terminate the ngrok process on exit
+        ngrok_process.terminate()
+    
