@@ -19,8 +19,8 @@ SERVO2_PIN = 13
 backgate_low = 3
 backgate_high = 14
 
-frontgate_low = 4
-frontgate_high = 2
+frontgate_low = 2
+frontgate_high = 4
 
 GPIO.setup(backgate_low, GPIO.OUT)
 GPIO.setup(backgate_high, GPIO.OUT)
