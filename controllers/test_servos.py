@@ -142,7 +142,7 @@ try:
 
         if choice == 'r':
             # control_rotational_servos()
-            GPIO_move(backgate_low, backgate_high, 2.5)
+            GPIO_move(frontgate_low, frontgate_high, 5)
             
         elif choice == 'reset':
             reset_servos()
