@@ -213,8 +213,6 @@ def main():
     GPIO.output(backgate_low, GPIO.LOW)
     GPIO.output(backgate_high, GPIO.LOW) 
     GPIO.cleanup()
-    GPIO.output(backgate_low, GPIO.LOW)
-    GPIO.output(backgate_high, GPIO.LOW)
     pi.set_servo_pulsewidth(SERVO1_PIN, 0)
     pi.stop()
 
