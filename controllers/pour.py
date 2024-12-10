@@ -37,8 +37,8 @@ top_high = 27
 backgate_low = 3
 backgate_high = 14
 
-frontgate_low = 2
-frontgate_high = 4
+frontgate_low = 4
+frontgate_high = 2
 
 # Set up linear servos
 GPIO.setup(bottom_low, GPIO.OUT)
