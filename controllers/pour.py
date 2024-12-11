@@ -208,6 +208,7 @@ def main():
     print("Pouring completed...")
     print("Resetting the system...")
     GPIO_move(frontgate_low, frontgate_high, MAX_FRONT)
+    smooth_move_servo(SERVO1_PIN, -1, -0.5, SERVO_CALIBRATION)
     print("System reset...")
     
     GPIO.output(backgate_low, GPIO.LOW)
