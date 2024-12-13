@@ -179,7 +179,7 @@ def main():
     ## Phase 1 - Pierce can and set up cup
     print("---------------------------------------------------------------")
     print("Starting Phase 1")
-    #pierce_can()
+    pierce_can()
     
     release_can()
     
