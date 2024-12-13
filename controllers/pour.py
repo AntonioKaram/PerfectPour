@@ -130,7 +130,7 @@ def tilt_cup():
     GPIO_move(bottom_high, bottom_low, MAX_BOTTOM * 0.05)
     
     sleep(2)
-    GPIO_move(bottom_high, bottom_low, MAX_BOTTOM * 0.55)
+    GPIO_move(bottom_high, bottom_low, MAX_BOTTOM * 0.5)
     sleep(1)
     
 def pour():
