@@ -122,6 +122,10 @@ def reset():
     GPIO_move(bottom_low, bottom_high, MAX_BOTTOM)
     GPIO_move(bottom_high, bottom_low, MAX_BOTTOM)
     
+    GPIO_move(top_low, top_high, 5)
+    GPIO_move(top_high, top_low, 10)
+    
+    
     
     
 reset()
